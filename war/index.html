@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
+<!-- above set at the top of the file will set     -->
+<!-- the browser's rendering engine into           -->
+<!-- "Quirks Mode". Replacing this declaration     -->
+<!-- with a "Standards Mode" doctype is supported, -->
+<!-- but may lead to some differences in layout.   -->
+
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Hello App Engine</title>
+  </head>
+
+  <body>
+   runRankingAlgorithm
+   <form action="/textcat/runRankingAlgorithm" method="POST">
+		
+		<input type="submit" value="RunAlgorithm">
+	</form>
+	
+   
+   
+   KKK
+	<form action="/textcat/getAllNotesServiceTEST" method="POST">
+		<input type="text" name="userID">	
+		<input type="submit" value="getAllNotesServiceTEST">
+	</form>
+	
+	<form action="/textcat/showAllNotes" method="POST">
+		<input type="text" name="userID">	<br>
+		<input type="submit" text = "GET ALL NOTES">
+	</form>
+   
+   
+   	Add Ordinary Note
+	<form action="textcat/addOrdinaryNote" method="post">
+		Ordinary note: <input type="text" name="ordinaryNoteContent">
+		<br>userID<input type="text" name="userID"> <input
+			type="submit" value="Add ordinary note">
+	</form>
+
+	Add Meeting Note
+	<form action="textcat/addMeetingNote" method="post">
+		userID<input type="text" name="userID"><br>
+		estimatedTransportTime<input type="text" name="estimatedTransportTime"><br>
+		meetingNoteDate<input type="text" name="meetingNoteDate"><br>
+		meetingPlace<input type="text" name="meetingPlace"><br>
+		meetingAgenda<input type="text" name="meetingAgenda"><br>
+		meetingTitle<input type="text" name="meetingTitle"><br> <input
+			type="submit" value="Add Meeting note">
+	</form>
+
+	Add Deadline note
+	<form action="textcat/addDeadLineNote" method="post">
+
+		progressPercentage<input type="text" name="progressPercentage"><br>
+		deadLineTitle<input type="text" name="deadLineTitle"><br>
+		deadLineDate<input type="text" name="deadLineDate"><br>
+		userID<input type="text" name="userID"><br> <input
+			type="submit" value="Add Deadline note">
+	</form>
+	Add Shopping Note
+
+	<form action="textcat/addShoppingNote" method="post">
+
+		productToBuy<input type="text" name="productToBuy"><br>
+		productCategory<input type="text" name="productCategory"><br>
+		userID<input type="text" name="userID"><br> <input
+			type="submit" value="Add Shopping note">
+	</form>
+  </body>
+</html>

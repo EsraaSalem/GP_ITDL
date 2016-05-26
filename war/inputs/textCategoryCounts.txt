@@ -1,0 +1,4 @@
+Sports 0 1
+Fashion 1 5
+Reading 2 10
+Computer 3 3
