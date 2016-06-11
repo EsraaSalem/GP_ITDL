@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.Vector;
 
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -13,6 +14,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
+import Model.RankingInputsModel;
 import Model.NoteModel;
 import dataEntities.DeadlineNoteEntity;
 import dataEntities.MeetingNoteEntity;
@@ -28,7 +30,6 @@ public class NotesServices {
 
 	
 	
-
 	@POST
 	@Path("/getAllNotesService")
 	public String getAllNotes(@FormParam("userID") String userID) {

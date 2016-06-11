@@ -21,8 +21,7 @@ import javax.xml.transform.stream.StreamResult;
 
 class TaxonomyTest {
 
-	public static String convertXMLtoJson(String xmlResponse)
-			throws JSONException {
+	public static String convertXMLtoJson(String xmlResponse) throws JSONException {
 		String jsonResponse = "";
 		try {
 			int PRETTY_PRINT_INDENT_FACTOR = 4;
@@ -36,24 +35,21 @@ class TaxonomyTest {
 
 	public static String getTextTaxonomy(JSONObject obj) throws JSONException {
 		try {
-			System.out.println("SSSSS");
-			System.out.println(obj.toString());
-			
+			// System.out.println("SSSSS");
+			// System.out.println(obj.toString());
+
 			String status = obj.getJSONObject("results").getString("status");
 			if (status.equals("OK")) {
-				String taxonomyResult = obj.getJSONObject("results").getString(
-						"taxonomy");
+				String taxonomyResult = obj.getJSONObject("results").getString("taxonomy");
 				if (!taxonomyResult.equals("")) {
-					String pageName = obj.getJSONObject("results").getString(
-							"taxonomy");
-					JSONObject res = (JSONObject) obj.getJSONObject("results")
-							.getJSONObject("taxonomy").getJSONArray("element")
-							.getJSONObject(0);
+					String pageName = obj.getJSONObject("results").getString("taxonomy");
+					JSONObject res = (JSONObject) obj.getJSONObject("results").getJSONObject("taxonomy")
+							.getJSONArray("element").getJSONObject(0);
 
 					return res.getString("label");
 				} else {
 
-					System.out.println("NO_Taxonomy");
+					// System.out.println("NO_Taxonomy");
 				}
 
 			} else {
@@ -67,9 +63,8 @@ class TaxonomyTest {
 		return "";
 	}
 
-	public static String getTextCategory(String text) throws IOException,
-			SAXException, ParserConfigurationException,
-			XPathExpressionException {
+	public static String getTextCategory(String text)
+			throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
 		AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 		AlchemyAPI_TaxonomyParams paramters = new AlchemyAPI_TaxonomyParams();
 
@@ -80,13 +75,11 @@ class TaxonomyTest {
 
 			return getTextTaxonomy(obj);
 
-		} catch (JSONException je) {  
+		} catch (JSONException je) {
 			System.out.println(je);
 		}
-		return "";  
+		return "";
 	}
-
-	
 
 	private static String getStringFromDocument(Document doc) {
 		try {

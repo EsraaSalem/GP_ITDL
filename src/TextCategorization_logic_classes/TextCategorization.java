@@ -68,6 +68,7 @@ public String callTextCategoryAPI(String textinput) throws JSONException, ParseE
 	if(sentenceClass.equals(""))
 	{
 		sentenceClass = classifyByUclassify(textinput);
+		sentenceClass = classifyByAlchemy(sentenceClass);
 	}
 	if(sentenceClass == null)
 	{
