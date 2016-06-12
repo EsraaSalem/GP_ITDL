@@ -358,6 +358,13 @@ public class Test {
 			@FormParam("catratio9") String catratio9, @FormParam("catname10") String catname10,
 			@FormParam("catratio10") String catratio10,
 
+			
+			@FormParam("catname11") String catname11,
+			@FormParam("catratio11") String catratio11,
+			
+			@FormParam("catname12") String catname12,
+			@FormParam("catratio12") String catratio12,
+			
 			@FormParam("userID") String userID
 	) throws org.json.simple.parser.ParseException {
 
@@ -373,12 +380,15 @@ public class Test {
 		JSONObject jsonObj8 = new JSONObject();	jsonObj8.put("categoryName", catname8);	jsonObj8.put("initialWeight", catratio8);	userInialWeights.add(jsonObj8);
 		JSONObject jsonObj9 = new JSONObject();	jsonObj9.put("categoryName", catname9);	jsonObj9.put("initialWeight", catratio9);	userInialWeights.add(jsonObj9);
 		JSONObject jsonObj10 = new JSONObject();jsonObj10.put("categoryName", catname10);jsonObj10.put("initialWeight", catratio10);userInialWeights.add(jsonObj10);
+		JSONObject jsonObj11 = new JSONObject();jsonObj11.put("categoryName", catname11);jsonObj11.put("initialWeight", catratio11);userInialWeights.add(jsonObj11);
+		JSONObject jsonObj12 = new JSONObject();jsonObj12.put("categoryName", catname12);jsonObj12.put("initialWeight", catratio12);userInialWeights.add(jsonObj12);
+		
 		String userInitialWeightsSTR = userInialWeights.toString();
+		//String serviceUrl = "http://localhost:8888/restNotes/enterInitialWeightsForOneUserService";
 		
-		
-		//String serviceUrl = "http://1-dot-secondhelloworld-1221.appspot.com/restNotes/enterInitialWeightsForOneUserService";
+		String serviceUrl = "http://1-dot-secondhelloworld-1221.appspot.com/restNotes/enterInitialWeightsForOneUserService";
 
-		String serviceUrl = "http://localhost:8888/restNotes/enterInitialWeightsForOneUserService";
+		
 
 		String urlParameters = "userID=" + userID + "&userInitialWeightsSTR="+ userInitialWeightsSTR;
 		
@@ -389,4 +399,15 @@ public class Test {
 		return retJson;
 	}
 
+	
+	
+	@POST
+	@Path("/getUserIinitailWeights")
+
+	public String getUserIinitailWeights(@FormParam("ID") String ID) throws org.json.simple.parser.ParseException {
+		RankingInputsModel r = new RankingInputsModel();
+		String result = r.getUserInitialWeightsByUserID(ID).toString();
+		return result;
+
+	}
 }

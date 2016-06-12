@@ -39,13 +39,41 @@ import com.google.appengine.api.datastore.Transaction;
 import com.google.apphosting.datastore.DatastoreV4.LookupRequest;
 
 import TextCategorization_logic_classes.TextCategorization;
+import dataEntities.NoteEntity;
 import dataEntities.PairComparison;
+import dataEntities.UserInialWeights;
 
 public class RankingInputsModel {
 
+	public Vector<UserInialWeights> getUserInitialWeightsByUserID(String userID) {
+
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		Vector<UserInialWeights> userInitialWeights= new Vector<UserInialWeights>();
+		
+		Query gaeQuery = new Query("userInitialWeights");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		
+		Filter propertyFilter = new FilterPredicate("userID", FilterOperator.EQUAL, userID.trim());
+	
+		
+		Query q = new Query("userInitialWeights").setFilter(propertyFilter);
+		pq = datastore.prepare(q);
+		
+		
+		for (Entity entity : pq.asIterable()) {
+			UserInialWeights uiw = new UserInialWeights();
+			uiw.setCategoryID(entity.getProperty("categoryID").toString().trim());
+			uiw.setCategoryName(entity.getProperty("categoryName").toString().trim());
+			uiw.setUserID(userID);
+			uiw.setInialWeight(Double.parseDouble(entity.getProperty("initialWeight").toString().trim()));
+			userInitialWeights.add(uiw);
+		}
+		return userInitialWeights;
+	}
+
 	/**
 	 * this is the final function which you will use in the ranking algrithm
-	 * **/
+	 **/
 	public Vector<PairComparison> getInputSourcesSignificance() {
 
 		Vector<PairComparison> pcVector = new Vector<PairComparison>();
@@ -70,9 +98,10 @@ public class RankingInputsModel {
 		return pcVector;
 
 	}
+
 	/**
 	 * this is a test function
-	 * **/
+	 **/
 	public String getInputSourcesSignificanceSTR() {
 
 		Vector<PairComparison> pcVector = new Vector<PairComparison>();
@@ -99,8 +128,9 @@ public class RankingInputsModel {
 	}
 
 	/**
-	 * just to add InputSourcesSignificance rates in the local host when read it from file
-	 * **/
+	 * just to add InputSourcesSignificance rates in the local host when read it
+	 * from file
+	 **/
 	public Vector<PairComparison> readFile() {
 
 		InputStream input = this.getClass().getClassLoader()
@@ -143,8 +173,8 @@ public class RankingInputsModel {
 
 	/**
 	 * just to add InputSourcesSignificance to google app engine DB
-	 * **/
-	
+	 **/
+
 	public boolean addPairWiseComparison(PairComparison pc) {
 
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -167,54 +197,82 @@ public class RankingInputsModel {
 		return true;
 	}
 
-
-
-	public boolean addUserInitialWeights(String userID, String jsonArraySTR) throws ParseException, JSONException
-	{
+	public boolean addUserInitialWeights(String userID, String jsonArraySTR) throws ParseException, JSONException {
 		JSONParser parser = new JSONParser();
-
+		String artCategory = "art and entertainment";
 		TextCategorization tc = new TextCategorization();
 		JSONArray jsonArray = (JSONArray) parser.parse(jsonArraySTR.toString());
-		for(int i = 0 ; i < jsonArray.size(); i++)
-		{
-			JSONObject o = (JSONObject)jsonArray.get(i);
+		double sumArt = 0.0;
+		int counter = 0;
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject o = (JSONObject) jsonArray.get(i);
 			String categoryName = o.get("categoryName").toString();
-			System.out.println(categoryName);
+
+			// System.out.println(categoryName);
 			String definedCategory = tc.callTextCategoryAPI(categoryName);
+			if (definedCategory.equals(artCategory)) {
+				double ratio = Double.parseDouble(o.get("initialWeight").toString());
+				sumArt += ratio;
+				counter++;
+			}
 			o.put("categoryName", definedCategory);
-			System.out.println("AAAAAAAAAAAAAAAAAAAAAA=  "+o.toString());
-			
-			
+			jsonArray.set(i, o);
+			// System.out.println("AAAAAAAAAAAAAAAAAAAAAA= "+o.toString());
+
 		}
-		
-		System.out.println("111111111111111111111111111");
-		for(int i = 0 ; i < jsonArray.size(); i++)
-		{
-			
-			boolean result = add1UserInitialWeightsDB(userID, (JSONObject)jsonArray.get(i));
-			if(result == false) return false;
+		JSONArray newJsonArray = new JSONArray();
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject o = (JSONObject) jsonArray.get(i);
+			String categoryName = o.get("categoryName").toString();
+			if (!categoryName.equals(artCategory)) {
+				newJsonArray.add(o);
+			}
 		}
-		
+		JSONObject o2 = new JSONObject();
+
+		String num1Str = String.format("%.3g%n", (double) (sumArt / counter));
+
+		double num1 = Double.parseDouble(num1Str);
+
+		o2.put("categoryName", artCategory);
+
+		o2.put("initialWeight", num1);
+		newJsonArray.add(o2);
+
+		// System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+		// System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+		// System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+		for (int i = 0; i < newJsonArray.size(); i++) {
+			// System.out.println(newJsonArray.get(i).toString());
+
+			boolean result = add1UserInitialWeightsDB(userID, (JSONObject) newJsonArray.get(i));
+			if (result == false)
+				return false;
+		}
+		// System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+		// System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+		// System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+
 		return true;
 	}
-	public boolean add1UserInitialWeightsDB(String userID, JSONObject jsonObj)
-	{
-		
-		System.out.println("22222222222222222222222");
+
+	public boolean add1UserInitialWeightsDB(String userID, JSONObject jsonObj) {
+
+		// System.out.println("22222222222222222222222");
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
 		try {
 			Entity entity = new Entity("userInitialWeights");
 
-			
 			String categoryName = jsonObj.get("categoryName").toString().trim().toLowerCase();
 			DefinedCategories dc = new DefinedCategories();
-			String categoryID  = dc.getCategoryIDByName(categoryName);
+			String categoryID = dc.getCategoryIDByName(categoryName);
 			entity.setProperty("userID", userID);
 			entity.setProperty("categoryID", String.valueOf(categoryID));
-			entity.setProperty("categoryName", String.valueOf(jsonObj.get("categoryName").toString().toLowerCase().toString()));
+			entity.setProperty("categoryName",
+					String.valueOf(jsonObj.get("categoryName").toString().toLowerCase().toString()));
 			entity.setProperty("initialWeight", String.valueOf(jsonObj.get("initialWeight").toString()));
-			
+
 			datastore.put(entity);
 			txn.commit();
 		} finally {
@@ -222,22 +280,9 @@ public class RankingInputsModel {
 				txn.rollback();
 				return false;
 			}
-			
+
 		}
 		return true;
 	}
-	
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
