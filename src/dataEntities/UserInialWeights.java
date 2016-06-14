@@ -7,7 +7,14 @@ public class UserInialWeights {
 	private String categoryID;
 	private String categoryName;
 	private String userID;
+	private String categoryRecordID;
 	
+	public String getCategoryRecordID() {
+		return categoryRecordID;
+	}
+	public void setCategoryRecordID(String categoryRecordID) {
+		this.categoryRecordID = categoryRecordID;
+	}
 	public String getUserID() {
 		return userID;
 	}
@@ -44,7 +51,7 @@ public class UserInialWeights {
 	@Override
 	public String toString() {
 		return "UserInialWeights [inialWeight=" + inialWeight + ", categoryID=" + categoryID + ", categoryName="
-				+ categoryName + "]";
+				+ categoryName + ", userID=" + userID + ", categoryRecordID=" + categoryRecordID + "]";
 	}
 	
 	 

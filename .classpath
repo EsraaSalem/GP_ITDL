@@ -58,5 +58,6 @@
 	<classpathentry kind="lib" path="C:/Users/Esraa/Coding workspace/GP_IntelligentToDoList/war/WEB-INF/lib/persistence-api-1.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Esraa/Coding workspace/GP_IntelligentToDoList/war/WEB-INF/lib/twitter4j-core-4.0.4.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Esraa/Coding workspace/GP_IntelligentToDoList/war/WEB-INF/lib/validation-api-1.1.0.Final.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Esraa/Downloads/New folder/lib/langdetect.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

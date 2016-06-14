@@ -1,13 +1,17 @@
 package recomm_reranking_algorithm_logic_classes;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Vector;
 
 import javax.ws.rs.FormParam;
 
+import org.apache.tools.ant.types.resources.Last;
 import org.json.simple.parser.ParseException;
 
 import com.google.appengine.labs.repackaged.org.json.JSONException;
+import com.sun.org.apache.regexp.internal.recompile;
 
 import Model.NoteModel;
 import TextCategorization_logic_classes.TextCategorization;
@@ -20,17 +24,16 @@ import dataEntities.ShoppingNoteEntity;
 import dataEntities.UserEntity;
 import note_crud_operation_logic_classes.NoteCRUDOperations;
 
-public class NoteComponent extends InputSources {
+public class NoteComponent {
 
 	private NoteModel noteModel_DB;
-	final private String shopping = "Shopping";
-	final private String ordinary = "Ordinary";
-	final private String deadline = "DeadLine";
-	final private String meeting = "Meeting";
-	public NoteComponent()
-	{
+	UpdatePreferenceLastDate lastDate;
+
+	public NoteComponent() {
 		noteModel_DB = new NoteModel();
+		lastDate = new UpdatePreferenceLastDate();
 	}
+
 	public Vector<NoteEntity> getAllNotesServiceTEST(@FormParam("userID") String userID) throws ParseException {
 
 		NoteCRUDOperations noteManager = new NoteCRUDOperations();
@@ -38,58 +41,64 @@ public class NoteComponent extends InputSources {
 		return allNotes;
 	}
 
-	@Override
-	public void extractInput() {
-		// TODO Auto-generated method stub
+	public Vector<InputType> getAllNotesWithinRange(Vector<NoteEntity> allNotes, Timestamp lastUpdateDate) {
+		java.util.Date date = new java.util.Date();
+		Timestamp todayDate = new Timestamp(date.getTime());
+		Vector<InputType> allInputs = new Vector<InputType>();
+		for (int i = 0; i < allNotes.size(); i++) {
+			InputType input = new InputType();
 
-		try {
-			Vector<NoteEntity> allNotes = getAllNotesServiceTEST(UserEntity.getUserInstance().getUserDB_ID());
-			
-			for (int i = 0; i < allNotes.size(); i++) {
-				
-				TextCategorization textCategorization = new TextCategorization();				
-				String noteText = "";
-				
-				Date noteCreationDate = new Date(allNotes.get(i).getCreationDate().getTime());;
-				if(allNotes.get(i).getNoteType().equals(ordinary))
-				{
-					OrdinaryNoteEntity obj = new OrdinaryNoteEntity();
-					obj = (OrdinaryNoteEntity)allNotes.get(i);
-					noteText = obj.getNoteContent();
+			Timestamp noteCreationDate = allNotes.get(i).getCreationDate();
+			if (lastDate.isWithinRange(todayDate, lastUpdateDate, noteCreationDate)) {
+				try {
+					input = lastDate.buildNoteInputType(allNotes.get(i));
+				} catch (JSONException | ParseException e) {
+					// TODO Auto-generated catch block
+
 				}
-				else if(allNotes.get(i).getNoteType().equals(meeting))
-				{
-					MeetingNoteEntity obj = new MeetingNoteEntity();
-					obj = (MeetingNoteEntity) allNotes.get(i);
-					noteText = obj.getMeetingAgenda()+" "+obj.getMeetingTitle();
-				}
-				else if(allNotes.get(i).getNoteType().equals(deadline))
-				{
-					DeadlineNoteEntity obj = new DeadlineNoteEntity();
-					obj = (DeadlineNoteEntity) allNotes.get(i);
-					noteText = obj.getDeadLineTitle();
-				}
-				else if(allNotes.get(i).getNoteType().equals(shopping))
-				{
-					ShoppingNoteEntity obj = new ShoppingNoteEntity();
-					obj = (ShoppingNoteEntity)allNotes.get(i);
-					noteText = obj.getProductCategory() + " "+obj.getProductToBuy();
-				}
-				
-				String textCategory = textCategorization.callTextCategoryAPI(noteText);
-				
-				noteModel_DB.noteIsTextCategorized(allNotes.get(i).getNoteID());
-				
-				allInputs.add(new InputType(noteText, "note", noteCreationDate,textCategory));
+				allInputs.add(input);
+
 			}
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}
+		return allInputs;
+
+	}
+
+	public Vector<InputType> getAllNotesWithoutRange(Vector<NoteEntity> allNotes) throws JSONException, ParseException {
+		Vector<InputType> allInputs = new Vector<InputType>();
+		for (int i = 0; i < allNotes.size(); i++) {
+			InputType input = new InputType();
+			input = lastDate.buildNoteInputType(allNotes.get(i));
+			allInputs.add(input);
+		}
+		return allInputs;
+	}
+
+	public Vector<InputType> extractNotes(String userID, Timestamp lastUpdateDate)
+			throws ParseException, JSONException {
+
+		// Timestamp lastUpdateDate =lastDate.getLastUpdatePreferneceDate();
+
+		Vector<NoteEntity> allNotes = getAllNotesServiceTEST(userID);
+
+		Vector<InputType> allInputs = new Vector<InputType>();
+		if (allNotes.size() > 0) {
+			if (lastUpdateDate == null) {
+				allInputs = getAllNotesWithoutRange(allNotes);
+				// lastDate.addLastUpdatePreferencesDate();
+			} else {
+				allInputs = getAllNotesWithinRange(allNotes, lastUpdateDate);
+			}
+			for (int i = 0; i < allInputs.size(); i++) {
+
+				System.out.println(allInputs.get(i).toString());
+			}
+			if (allInputs.size() == 0) {
+				System.out.println("There is NO Notes");
+			}
 		}
 
+		return allInputs;
 	}
 
 }

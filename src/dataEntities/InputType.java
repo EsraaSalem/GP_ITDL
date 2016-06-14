@@ -1,17 +1,18 @@
 package dataEntities;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class InputType {
 	
 	private String text;
 	private String sourcetype;
-	private Date creationDate;
+	private Timestamp creationDate;
 	private String textCategory;
 	public InputType() {
 		super();
 	}
-	public InputType(String text, String sourcetype, Date creationDate, String textCategory) {
+	public InputType(String text, String sourcetype, Timestamp creationDate, String textCategory) {
 		super();
 		this.text = text;
 		this.sourcetype = sourcetype;
@@ -31,10 +32,10 @@ public class InputType {
 	public void setSourcetype(String sourcetype) {
 		this.sourcetype = sourcetype;
 	}
-	public Date getCreationDate() {
+	public Timestamp getCreationDate() {
 		return creationDate;
 	}
-	public void setCreationDate(Date creationDate) {
+	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
 	}
 	public String getTextCategory() {

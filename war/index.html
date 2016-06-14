@@ -13,6 +13,92 @@
 </head>
 
 <body>
+
+
+getUserInitialWeightsByUserID
+
+<form action="/textcat/aaaGETUserInitialWeights" method="POST">
+<input type="text"	name="id">
+
+<input type="submit"
+			value="NEW    GET getUserIinitailWeights">
+</form>
+	<form action="/textcat/enterInitialWeights1User" method="POST">
+		userID :<input type="text" name="userID"> catname1 : <input
+			type="text" name="catname1"> catRatio1: <input type="text"
+			name="catratio1"> <br> catname2 : <input type="text"
+			name="catname2"> catRatio2: <input type="text"
+			name="catratio2"> <br> catname3 : <input type="text"
+			name="catname3"> catRatio3: <input type="text"
+			name="catratio3"> <br> catname4 : <input type="text"
+			name="catname4"> catRatio4: <input type="text"
+			name="catratio4"> <br> catname5 : <input type="text"
+			name="catname5"> catRatio5: <input type="text"
+			name="catratio5"> <br> catname6 : <input type="text"
+			name="catname6"> catRatio6: <input type="text"
+			name="catratio6"> <br> catname7 : <input type="text"
+			name="catname7"> catRatio7: <input type="text"
+			name="catratio7"> <br> catname8 : <input type="text"
+			name="catname8"> catRatio8: <input type="text"
+			name="catratio8"> <br> catname9 : <input type="text"
+			name="catname9"> catRatio9: <input type="text"
+			name="catratio9"> <br> catname10 : <input type="text"
+			name="catname10"> catRatio10: <input type="text"
+			name="catratio10"> <br> catname11 : <input type="text"
+			name="catname11"> catRatio11: <input type="text"
+			name="catratio11"> <br> catname12 : <input type="text"
+			name="catname12"> catRatio12: <input type="text"
+			name="catratio12"> <br> <input type="submit"
+			value="Enter inial weights">
+	</form>
+
+	<h1>AAAAAAAAAAAAAAAAAAAAAAAAAA</h1>
+
+	<form action="/textcat/getUserIinitailWeights" method="POST">
+		User ID: <input type="text" name="ID"> <input type="submit"
+			value="GET getUserIinitailWeights">
+	</form>
+
+
+
+
+	Add Ordinary Note
+	<form action="textcat/addOrdinaryNote" method="post">
+		Ordinary note: <input type="text" name="ordinaryNoteContent">
+		<br>userID<input type="text" name="userID"> <input
+			type="submit" value="Add ordinary note">
+	</form>
+
+	Add Meeting Note
+	<form action="textcat/addMeetingNote" method="post">
+		userID<input type="text" name="userID"><br>
+		estimatedTransportTime<input type="text" name="estimatedTransportTime"><br>
+		meetingNoteDate<input type="text" name="meetingNoteDate"><br>
+		meetingPlace<input type="text" name="meetingPlace"><br>
+		meetingAgenda<input type="text" name="meetingAgenda"><br>
+		meetingTitle<input type="text" name="meetingTitle"><br> <input
+			type="submit" value="Add Meeting note">
+	</form>
+
+	Add Deadline note
+	<form action="textcat/addDeadLineNote" method="post">
+
+		progressPercentage<input type="text" name="progressPercentage"><br>
+		deadLineTitle<input type="text" name="deadLineTitle"><br>
+		deadLineDate<input type="text" name="deadLineDate"><br>
+		userID<input type="text" name="userID"><br> <input
+			type="submit" value="Add Deadline note">
+	</form>
+	Add Shopping Note
+
+	<form action="textcat/addShoppingNote" method="post">
+
+		productToBuy<input type="text" name="productToBuy"><br>
+		productCategory<input type="text" name="productCategory"><br>
+		userID<input type="text" name="userID"><br> <input
+			type="submit" value="Add Shopping note">
+	</form>
+
 	<!--   <h1>Test text categorization</h1> -->
 	<!--   <form action="/textcat/categorizeTextController" method="POST"> -->
 	<!-- 		<input type="text" name="text">	<br> -->
@@ -24,65 +110,76 @@
 	<!-- 		<input type="submit" text = "ADD"> -->
 	<!-- 	</form> -->
 
-<!-- 	<h1>Test select category ID</h1> -->
-<!-- 	<form action="/textcat/getID" method="POST"> -->
-<!-- 		<input type="text" name="name"> <br> <input type="submit" -->
-<!-- 			value="get category ID"> -->
-<!-- 	</form> -->
+	<!-- 	<h1>Test select category ID</h1> -->
+	<!-- 	<form action="/textcat/getID" method="POST"> -->
+	<!-- 		<input type="text" name="name"> <br> <input type="submit" -->
+	<!-- 			value="get category ID"> -->
+	<!-- 	</form> -->
 
 
-<!-- 	<h1>Test select category Name</h1> -->
-<!-- 	<form action="/textcat/add" method="POST"> -->
-<!-- 		<input type="text" name="ID"> <br> <input type="submit" -->
-<!-- 			value="get category Name"> -->
-<!-- 	</form> -->
+	<!-- 	<h1>Test select category Name</h1> -->
+	<!-- 	<form action="/textcat/add" method="POST"> -->
+	<!-- 		<input type="text" name="ID"> <br> <input type="submit" -->
+	<!-- 			value="get category Name"> -->
+	<!-- 	</form> -->
 
-	<h1>ADD input significance</h1>
+	<!-- <!-- test get Input sources signficance I already add it manaually to server and from file locally -->
+	-->
+	<!-- 	<form action="/textcat/getInputSourcesSignificance" method="POST"> -->
 
-	<form action="/textcat/getInputSourcesSignificance" method="POST">
+	<!-- 		<input type="submit" value="GET sources significance"> -->
+	<!-- 	</form> -->
 
-		<input type="submit" value="GET sources significance">
-	</form>
+	<!-- <!-- test enter initial weights significance -->
+	-->
 
-	<form action="/textcat/enterInitialWeights1User" method="POST">
-    userID :<input type="text" name="userID">
-	catname1 : <input type="text" name="catname1">  catRatio1:   <input type="text" name="catratio1"> <br>
-	catname2 : <input type="text" name="catname2">  catRatio2:   <input type="text" name="catratio2"> <br>
-	catname3 : <input type="text" name="catname3">  catRatio3:   <input type="text" name="catratio3"> <br>
-	catname4 : <input type="text" name="catname4">  catRatio4:   <input type="text" name="catratio4"> <br>
-	catname5 : <input type="text" name="catname5">  catRatio5:   <input type="text" name="catratio5"> <br>
-	catname6 : <input type="text" name="catname6">  catRatio6:   <input type="text" name="catratio6"> <br>
-	catname7 : <input type="text" name="catname7">  catRatio7:   <input type="text" name="catratio7"> <br>
-	catname8 : <input type="text" name="catname8">  catRatio8:   <input type="text" name="catratio8"> <br>
-	catname9 : <input type="text" name="catname9">  catRatio9:   <input type="text" name="catratio9"> <br>
-	
-	catname10 : <input type="text" name="catname10">  catRatio10:   <input type="text" name="catratio10"> <br>
-	
-	catname11 : <input type="text" name="catname11">  catRatio11:   <input type="text" name="catratio11"> <br>
-	catname12 : <input type="text" name="catname12">  catRatio12:   <input type="text" name="catratio12"> <br>
-	
-	
-		<input type="submit" value="Enter inial weights">
-	</form>
 
-<h1>AAAAAAAAAAAAAAAAAAAAAAAAAA</h1>
+	<!-- <!-- test get user initial weights -->
+	-->
 
-<form action="/textcat/getUserIinitailWeights" method="POST">
- User ID: <input type="text" name="ID"> 
-		<input type="submit" value="GET sources significance">
+	<!-- 	<br> -->
+	<!-- 	<br> -->
+
+
+
+	<!-- <!-- 	test getAllNOtes -->
+
+	<!-- 	<form action="/textcat/showAllNotes" method="POST"> -->
+	<!-- 		User ID: <input type="text" name="userID">  -->
+	<!-- 		<input type="submit" value="showAllNotes"> -->
+	<!-- 	</form> -->
+
+
+	<form action="/textcat/addDate" method="POST">
+		<input type="submit" value="add date">
 	</form>
 
 
+	<form action="/textcat/getDate" method="POST">
+		<input type="submit" value="get date">
+	</form>
+
+	<form action="/textcat/getTweets" method="POST">
+		<input type="submit" value="get Tweets">
+	</form>
+
+
+	<form action="/textcat/getNotesSource" method="POST">
+		<input type="submit" value="get NOTES">
+	</form>
 
 
 
 
+	<form action="/textcat/getAllCategories" method="POST">
+		<input type="submit" value="get All Categories">
+	</form>
 
-
-
-
-
-
-
+	<h1>Update preferences web service test</h1>
+	<form action="/textcat/updateUserPreferences" method="POST">
+		User ID: <input type="text" name="userID"> <br> Twitter
+		User name: <input type="text" name="twitterID"><br> <input
+			type="submit" value="updateUserPreferences">
+	</form>
 </body>
 </html>

@@ -16,7 +16,9 @@ import javax.ws.rs.core.MediaType;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.sun.org.apache.regexp.internal.recompile;
 
 import CRUD_oprations_Serivces.RankingInputs;
@@ -24,8 +26,12 @@ import HTTPConnection.Connection;
 import Model.DefinedCategories;
 import Model.RankingInputsModel;
 import Model.NoteParser;
-
-import dataEntities.NoteEntity;;
+import dataEntities.CategoryCountOfSources;
+import dataEntities.NoteEntity;
+import recomm_reranking_algorithm_logic_classes.NoteComponent;
+import recomm_reranking_algorithm_logic_classes.RerankingAlgorithmLogic;
+import recomm_reranking_algorithm_logic_classes.TwitterComponent;
+import recomm_reranking_algorithm_logic_classes.UpdatePreferenceLastDate;;
 
 @Path("/")
 @Produces("text/html")
@@ -69,7 +75,10 @@ public class Test {
 	@Produces("text/html")
 	public String getAllNotes111(@FormParam("userID") String userID) throws org.json.simple.parser.ParseException {
 
-		String serviceUrl = "http://localhost:8888/restNotes/getAllNotesService";
+		// String serviceUrl =
+		// "http://localhost:8888/restNotes/getAllNotesService";
+		String serviceUrl = "http://1-dot-secondhelloworld-1221.appspot.com/restNotes/getAllNotesService";
+
 		String urlParameters = "userID=" + userID;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
@@ -79,6 +88,10 @@ public class Test {
 		JSONParser parser = new JSONParser();
 
 		JSONArray array = (JSONArray) parser.parse(retJson.toString());
+
+		if (array.size() == 0) {
+			return "emptyNotes";
+		}
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject object;
 			object = (JSONObject) array.get(i);
@@ -358,56 +371,161 @@ public class Test {
 			@FormParam("catratio9") String catratio9, @FormParam("catname10") String catname10,
 			@FormParam("catratio10") String catratio10,
 
-			
-			@FormParam("catname11") String catname11,
-			@FormParam("catratio11") String catratio11,
-			
-			@FormParam("catname12") String catname12,
-			@FormParam("catratio12") String catratio12,
-			
-			@FormParam("userID") String userID
-	) throws org.json.simple.parser.ParseException {
+			@FormParam("catname11") String catname11, @FormParam("catratio11") String catratio11,
 
-		
+			@FormParam("catname12") String catname12, @FormParam("catratio12") String catratio12,
+
+			@FormParam("userID") String userID) throws org.json.simple.parser.ParseException {
+
 		JSONArray userInialWeights = new JSONArray();
-		JSONObject jsonObj1 = new JSONObject();	jsonObj1.put("categoryName", catname1);	jsonObj1.put("initialWeight", catratio1);	userInialWeights.add(jsonObj1);
-		JSONObject jsonObj2 = new JSONObject();	jsonObj2.put("categoryName", catname2);	jsonObj2.put("initialWeight", catratio2);	userInialWeights.add(jsonObj2);
-		JSONObject jsonObj3 = new JSONObject();	jsonObj3.put("categoryName", catname3);	jsonObj3.put("initialWeight", catratio3);	userInialWeights.add(jsonObj3);
-		JSONObject jsonObj4 = new JSONObject();	jsonObj4.put("categoryName", catname4);	jsonObj4.put("initialWeight", catratio4);	userInialWeights.add(jsonObj4);
-		JSONObject jsonObj5 = new JSONObject();	jsonObj5.put("categoryName", catname5);	jsonObj5.put("initialWeight", catratio5);	userInialWeights.add(jsonObj5);
-		JSONObject jsonObj6 = new JSONObject();	jsonObj6.put("categoryName", catname6);	jsonObj6.put("initialWeight", catratio6);	userInialWeights.add(jsonObj6);
-		JSONObject jsonObj7 = new JSONObject();	jsonObj7.put("categoryName", catname7);	jsonObj7.put("initialWeight", catratio7);	userInialWeights.add(jsonObj7);
-		JSONObject jsonObj8 = new JSONObject();	jsonObj8.put("categoryName", catname8);	jsonObj8.put("initialWeight", catratio8);	userInialWeights.add(jsonObj8);
-		JSONObject jsonObj9 = new JSONObject();	jsonObj9.put("categoryName", catname9);	jsonObj9.put("initialWeight", catratio9);	userInialWeights.add(jsonObj9);
-		JSONObject jsonObj10 = new JSONObject();jsonObj10.put("categoryName", catname10);jsonObj10.put("initialWeight", catratio10);userInialWeights.add(jsonObj10);
-		JSONObject jsonObj11 = new JSONObject();jsonObj11.put("categoryName", catname11);jsonObj11.put("initialWeight", catratio11);userInialWeights.add(jsonObj11);
-		JSONObject jsonObj12 = new JSONObject();jsonObj12.put("categoryName", catname12);jsonObj12.put("initialWeight", catratio12);userInialWeights.add(jsonObj12);
+
+		JSONObject jsonObj1 = new JSONObject();
+		jsonObj1.put("categoryName", catname1);
+		jsonObj1.put("initialWeight", catratio1);
+		userInialWeights.add(jsonObj1);
 		
+		
+		
+		JSONObject jsonObj2 = new JSONObject();
+		jsonObj2.put("categoryName", catname2);
+		jsonObj2.put("initialWeight", catratio2);
+		userInialWeights.add(jsonObj2);
+		JSONObject jsonObj3 = new JSONObject();
+		jsonObj3.put("categoryName", catname3);
+		jsonObj3.put("initialWeight", catratio3);
+		userInialWeights.add(jsonObj3);
+		JSONObject jsonObj4 = new JSONObject();
+		jsonObj4.put("categoryName", catname4);
+		jsonObj4.put("initialWeight", catratio4);
+		userInialWeights.add(jsonObj4);
+		JSONObject jsonObj5 = new JSONObject();
+		jsonObj5.put("categoryName", catname5);
+		jsonObj5.put("initialWeight", catratio5);
+		userInialWeights.add(jsonObj5);
+		JSONObject jsonObj6 = new JSONObject();
+		jsonObj6.put("categoryName", catname6);
+		jsonObj6.put("initialWeight", catratio6);
+		userInialWeights.add(jsonObj6);
+		JSONObject jsonObj7 = new JSONObject();
+		jsonObj7.put("categoryName", catname7);
+		jsonObj7.put("initialWeight", catratio7);
+		userInialWeights.add(jsonObj7);
+		JSONObject jsonObj8 = new JSONObject();
+		jsonObj8.put("categoryName", catname8);
+		jsonObj8.put("initialWeight", catratio8);
+		userInialWeights.add(jsonObj8);
+		JSONObject jsonObj9 = new JSONObject();
+		jsonObj9.put("categoryName", catname9);
+		jsonObj9.put("initialWeight", catratio9);
+		userInialWeights.add(jsonObj9);
+		JSONObject jsonObj10 = new JSONObject();
+		jsonObj10.put("categoryName", catname10);
+		jsonObj10.put("initialWeight", catratio10);
+		userInialWeights.add(jsonObj10);
+		JSONObject jsonObj11 = new JSONObject();
+		jsonObj11.put("categoryName", catname11);
+		jsonObj11.put("initialWeight", catratio11);
+		userInialWeights.add(jsonObj11);
+		JSONObject jsonObj12 = new JSONObject();
+		jsonObj12.put("categoryName", catname12);
+		jsonObj12.put("initialWeight", catratio12);
+		userInialWeights.add(jsonObj12);
+
 		String userInitialWeightsSTR = userInialWeights.toString();
-		//String serviceUrl = "http://localhost:8888/restNotes/enterInitialWeightsForOneUserService";
 		
-		String serviceUrl = "http://1-dot-secondhelloworld-1221.appspot.com/restNotes/enterInitialWeightsForOneUserService";
+//		System.out.println("VVVVVVV  "+userID );
+//		System.out.println("KKKKKKKKKKKKKKKKKK  ");
+//		System.out.println(userInitialWeightsSTR);
+		String serviceUrl = "http://localhost:8888/restNotes/enterInitialWeightsForOneUserService";
 
-		
+		//String serviceUrl = "http://4-dot-secondhelloworld-1221.appspot.com/restNotes/enterInitialWeightsForOneUserService";
 
-		String urlParameters = "userID=" + userID + "&userInitialWeightsSTR="+ userInitialWeightsSTR;
-		
-		
+		String urlParameters = "userID=" + userID + "&userInitialWeightsSTR=" + userInitialWeightsSTR;
+
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
-		
+
 		return retJson;
 	}
 
-	
-	
 	@POST
-	@Path("/getUserIinitailWeights")
+	@Path("/aaaGETUserInitialWeights")
 
-	public String getUserIinitailWeights(@FormParam("ID") String ID) throws org.json.simple.parser.ParseException {
+	public String getUserIinitailWeights(@FormParam("id") String ID) throws org.json.simple.parser.ParseException {
 		RankingInputsModel r = new RankingInputsModel();
 		String result = r.getUserInitialWeightsByUserID(ID).toString();
 		return result;
 
 	}
+
+	@POST
+	@Path("/updateUserPreferences")
+
+	public String updateUserPerferences(@FormParam("userID") String ID, @FormParam("twitterID") String twitterID)
+			throws org.json.simple.parser.ParseException {
+
+		String serviceUrl = "http://localhost:8888/restRanking/updateUserPreferenceService";
+		
+		String urlParameters = "userID="+ID+"&twitterID="+twitterID;
+		System.out.println("==============   Parameters   "+urlParameters);
+		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		return retJson;
+
+	}
+
+	@POST
+	@Path("/addDate")
+	public String addDate() {
+		UpdatePreferenceLastDate r = new UpdatePreferenceLastDate();
+		r.addLastUpdatePreferencesDate("TTT");
+		return "added";
+	}
+
+	@POST
+	@Path("/getDate")
+	public String getDate() {
+		UpdatePreferenceLastDate r2 = new UpdatePreferenceLastDate();
+		String result = String.valueOf(r2.getLastUpdatePreferneceDate("TTT"));
+
+		return result;
+	}
+
+	// @POST
+	// @Path("/getTweets")
+	// public String getTweets()
+	// {
+	// TwitterComponent t = new TwitterComponent();
+	// t.extractTweets("@ESraa");
+	//
+	// return "show tweets";
+	// }
+	// @POST
+	// @Path("/getNotesSource")
+	// public String getNotesSource()
+	// {
+	// NoteComponent n = new NoteComponent();
+	// try {
+	// n.extractNotes("123456");
+	// } catch (ParseException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// } catch (JSONException e) {
+	// // TODO Auto-generated catch block
+	// //e.printStackTrace();
+	// return "failed";
+	// }
+	//
+	// return "show Notes";
+	// }
+	@POST
+	@Path("/getAllCategories")
+	public String getAllCategories() {
+		DefinedCategories fc = new DefinedCategories();
+		Vector<CategoryCountOfSources> ccos = fc.selectAllCategory();
+
+		return ccos.toString();
+	}
+	
+	
 }

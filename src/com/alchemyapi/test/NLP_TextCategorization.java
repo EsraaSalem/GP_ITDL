@@ -22,9 +22,12 @@ public class NLP_TextCategorization {
 		} catch (XPathExpressionException | IOException | SAXException
 				| ParserConfigurationException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return "";
+		} catch(Exception ee)
+		{
+			return "";
 		}
-		return "";
+		
 	}
 
 }

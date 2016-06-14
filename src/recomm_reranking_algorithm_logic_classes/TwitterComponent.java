@@ -1,7 +1,10 @@
 package recomm_reranking_algorithm_logic_classes;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Vector;
+
+import javax.persistence.criteria.CriteriaBuilder.In;
 
 import org.json.simple.parser.ParseException;
 
@@ -17,57 +20,128 @@ import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 
-public class TwitterComponent extends InputSources {
+public class TwitterComponent {
+	UpdatePreferenceLastDate lastDate;
+	TextCategorization textcategorization;
 
-	
-	
-	public TwitterComponent()
-	{
-		
+	public TwitterComponent() {
+		lastDate = new UpdatePreferenceLastDate();
+		textcategorization = new TextCategorization();
 	}
-	@Override
-	public void extractInput() {
-		
-		// TODO Auto-generated method stub
+
+	public Vector<InputType> getAllTweets(List<Status> statuses) {
+
+		Vector<InputType> allInputs = new Vector<InputType>();
+		for (int i = 0; i < statuses.size(); i++) {
+			InputType input = new InputType();
+			java.util.Date tweetDate = statuses.get(i).getCreatedAt();
+			Timestamp tweetCreationDate = new Timestamp(tweetDate.getTime());
+			input.setCreationDate(tweetCreationDate);
+			input.setSourcetype("tweet");
+			input.setText(statuses.get(i).getText());
+			try {
+				input.setTextCategory(textcategorization.callTextCategoryAPI(statuses.get(i).getText()));
+			} catch (JSONException | ParseException e) {
+				// TODO Auto-generated catch block
+
+			}
+			//System.out.println("ALLLLLLLLLLLLLLLLLLLLLLLLL ");
+			//System.out.println(input.toString());
+			allInputs.add(input);
+		}
+		return allInputs;
+
+	}
+
+	public Vector<InputType> getTweetsWithin(List<Status> statuses, Timestamp lastUpdateDate) {
+		java.util.Date date = new java.util.Date();
+		Timestamp todayDate = new Timestamp(date.getTime());
+		Vector<InputType> allInputs = new Vector<InputType>();
+		for (int i = 0; i < statuses.size(); i++) {
+			InputType input = new InputType();
+			java.util.Date tweetDate = statuses.get(i).getCreatedAt();
+			Timestamp tweetCreationDate = new Timestamp(tweetDate.getTime());
+
+			if (lastDate.isWithinRange(todayDate, lastUpdateDate, tweetCreationDate)) {
+				System.out.println("SSSSSSSSSs    " + tweetCreationDate);
+				System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
+
+				input.setCreationDate(tweetCreationDate);
+				input.setSourcetype("tweet");
+				input.setText(statuses.get(i).getText());
+				try {
+					input.setTextCategory(textcategorization.callTextCategoryAPI(statuses.get(i).getText()));
+				} catch (JSONException | ParseException e) {
+					// TODO Auto-generated catch block
+
+				}
+				System.out.println(input.toString());
+				allInputs.add(input);
+			}
+		}
+		return allInputs;
+
+	}
+
+	public Vector<InputType> extractTweets(String twitterID, Timestamp lastUpdateDate) {
+
+		// Timestamp lastUpdateDate = lastDate.getLastUpdatePreferneceDate();
+
+		Vector<InputType> allInputs = new Vector<InputType>();
+
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true).setOAuthConsumerKey("0ZMKyv8tBJloZgG64VkgAJxf9")
 				.setOAuthConsumerSecret("tDg624UeSnFP3Bd2SzdiyFJ93Eex4qhZHG0dvJgjcLIJLSVInu")
 				.setOAuthAccessToken("4076988922-3YcGb97K3r05FJOI8lgCLvgA068uPhAYfQNU2fm")
 				.setOAuthAccessTokenSecret("GMXr7lBrSaYgUVggKIqTfEycOu5PJOwr9OD1Owyh1T0Ay");
-		
 		TwitterFactory tf = new TwitterFactory(cb.build());
 		Twitter twitter = tf.getInstance();
-		
+
+		java.util.Date date = new java.util.Date();
+		Timestamp todayDate = new Timestamp(date.getTime());
+
 		try {
-			
-			
+
 			User user = twitter.verifyCredentials();
-			List<Status> statuses = twitter.getUserTimeline(currentUser.getUserTwitterAccount().trim().toLowerCase());
+			List<Status> statuses = twitter.getUserTimeline(twitterID);
+			// for (int i = 0; i < statuses.size(); i++) {
+			// java.util.Date tweetDate = statuses.get(i).getCreatedAt();
+			// Timestamp tweetCreationDate = new Timestamp(tweetDate.getTime());
+			// // System.out.println("today date: " + todayDate.toString());
+			// //
+			// // System.out.println("tweet date: " +
+			// // tweetCreationDate.toString());
+			// // System.out.println("lastUpdateDate: " +
+			// // lastUpdateDate.toString());
+			// // System.out.println("Text = " + statuses.get(i).getText());
+			// System.out.println("-----------------------------------------------------------------------");
+			// }
 
-			for (int i = 0; i < statuses.size(); i++) {
+			if (statuses.size() > 0) {
+				if (lastUpdateDate == null) {
+					System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+					allInputs = getAllTweets(statuses);
+					// lastDate.addLastUpdatePreferencesDate();
+				} else {
+					System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+					allInputs = getTweetsWithin(statuses, lastUpdateDate);
+				}
 
-				TextCategorization textCategorization = new TextCategorization();				
-				String tweetText = statuses.get(i).getText().trim().toLowerCase();
-				String textCategory = textCategorization.callTextCategoryAPI(tweetText);
-				
-				allInputs.add(new InputType(tweetText, "tweet", statuses.get(i).getCreatedAt(),textCategory));
-				
-				
+				if (allInputs.size() == 0) {
+					System.out.println("there is No tweets");
+				}
 			}
-			
-
+			// getTweetsWithin(statuses, lastUpdateDate);
 		} catch (TwitterException te) {
-			te.printStackTrace();
-			System.out.println("Failed to get timeline: " + te.getMessage());
-			System.exit(-1);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// te.printStackTrace();
+			// System.out.println("Failed to get timeline: " + te.getMessage());
+			// System.exit(-1);
+			System.out.println("Error ocurred");
+			return null;
 		}
 
+		System.out.println("Sizeeeeeeeeeeeeeeee =  " + allInputs.size());
+		return allInputs;
 	}
 
 }

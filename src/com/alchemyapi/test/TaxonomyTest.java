@@ -68,9 +68,10 @@ class TaxonomyTest {
 		AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 		AlchemyAPI_TaxonomyParams paramters = new AlchemyAPI_TaxonomyParams();
 
-		Document doc = alchemyObj.TextGetTaxonomy(text);
-		String TEST_XML_STRING = getStringFromDocument(doc);
+		
 		try {
+			Document doc = alchemyObj.TextGetTaxonomy(text);
+			String TEST_XML_STRING = getStringFromDocument(doc);
 			JSONObject obj = new JSONObject(convertXMLtoJson(TEST_XML_STRING));
 
 			return getTextTaxonomy(obj);
@@ -78,6 +79,7 @@ class TaxonomyTest {
 		} catch (JSONException je) {
 			System.out.println(je);
 		}
+		
 		return "";
 	}
 

@@ -40,7 +40,7 @@ public abstract class InputSources {
 	}
 	
 	
-	public abstract void extractInput();
+	public abstract String extractInput();
 	
 	
 	

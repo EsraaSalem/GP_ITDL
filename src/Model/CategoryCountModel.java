@@ -25,6 +25,9 @@ import dataEntities.CategoryCounts;
 import dataEntities.NoteEntity;
 import dataEntities.OrdinaryNoteEntity;
 
+/**
+ * last update 26 April 2016
+ * **/
 public class CategoryCountModel {
 
 	public boolean isCategoryFound(String category, String userID) {

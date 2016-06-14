@@ -21,7 +21,10 @@ import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
+import dataEntities.CategoryCountOfSources;
 import dataEntities.NoteEntity;
+import dataEntities.PairComparison;
+import dataEntities.UserInialWeights;
 
 public class DefinedCategories {
 
@@ -128,19 +131,57 @@ public class DefinedCategories {
 		Query gaeQuery = new Query("Category").setFilter(propertyFilter);
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 
-	//	System.out.println("VVVVVVVVVVVVVVVVVVVVVVVVVV");
+		// System.out.println("VVVVVVVVVVVVVVVVVVVVVVVVVV");
 		Vector<Entity> e = new Vector<Entity>();
 		for (Entity entity : pq.asIterable()) {
 			e.add(entity);
 		}
-		Entity entity = e.get(0);
-//		System.out
-//				.println("AAA = " + entity.getKey().toString() + "   " + entity.getProperty("categoryName").toString());
-//		System.out.println("BBB = " + entity.getKey().getId());
-//		System.out.println("CCC = " + String.valueOf(entity.getKey().getId()));
+		if (e.size() > 0) {
+			Entity entity = e.get(0);
+			categoryID = String.valueOf(entity.getKey().getId());
+		}
+		
+		// System.out
+		// .println("AAA = " + entity.getKey().toString() + " " +
+		// entity.getProperty("categoryName").toString());
+		// System.out.println("BBB = " + entity.getKey().getId());
+		// System.out.println("CCC = " +
+		// String.valueOf(entity.getKey().getId()));
 
-		categoryID = String.valueOf(entity.getKey().getId());
+		
 		// categoryID = entity.getKey().toString();
 		return categoryID;
+	}
+
+	/**
+	 * select all defined categories in vector of (CategoryCuntOfSources) from
+	 * table category not userInitial Weights
+	 * 
+	 * @author Esraa Salem
+	 * @since Monday 13-06-2016
+	 */
+
+	public Vector<CategoryCountOfSources> selectAllCategory() {
+
+		Vector<CategoryCountOfSources> allCategories = new Vector<CategoryCountOfSources>();
+
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+		Query gaeQuery = new Query("Category");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		for (Entity entity : pq.asIterable()) {
+
+			CategoryCountOfSources category = new CategoryCountOfSources();
+			category.setCategoryName(String.valueOf(entity.getProperty("categoryName")).trim().toLowerCase());
+			category.setCategoryID(String.valueOf(entity.getKey().getId()));
+
+			System.out.println(category.toString());
+			allCategories.add(category);
+
+		}
+		System.out.println("categories Sizeeeeeeeeeeee   =  " + allCategories.size());
+
+		return allCategories;
+
 	}
 }
