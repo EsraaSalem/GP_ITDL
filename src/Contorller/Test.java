@@ -48,6 +48,7 @@ public class Test {
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
 		Vector<NearestStore> nearStores = new Vector<NearestStore>();
+		System.out.println("WWWWWWWWWWWWWWWWWWWWWW\n"+retJson);
 		nearStores = getParsesNearestStores(retJson);
 		System.out.println("---------------near store------------------------");
 		for(int i = 0 ; i < nearStores.size() ; i++)
@@ -59,7 +60,35 @@ public class Test {
 	}
 
 	
-	
+
+	@POST
+	@Path("/addShoppingNote")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String addShoppingNote(@FormParam("productToBuy") String productToBuy,
+			@FormParam("productCategory") String productCategory, @FormParam("userID") String userID)
+					throws org.json.simple.parser.ParseException {
+		String serviceUrl = "http://localhost:8888/restNotes/addShoppingNoteService";
+		// String serviceUrl =
+		// "http://2-dot-secondhelloworld-1221.appspot.com/rest/addShoppingNoteService";
+		java.util.Date date = new java.util.Date();
+		boolean isDone = false;
+		boolean isTextCategorized = false;
+		String noteType = "Shopping";
+		String urlParameters = "productToBuy=" + productToBuy + "&creationDate="
+				+ String.valueOf(new Timestamp(date.getTime())) + "&isDone=" + isDone + "&isTextCategorized="
+				+ isTextCategorized + "&noteType=" + noteType + "&userID=" + userID + "&productCategory="
+				+ productCategory;
+		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		JSONParser parser = new JSONParser();
+		Object obj;
+		obj = parser.parse(retJson);
+		JSONObject object = (JSONObject) obj;
+		if (object.get("Status").equals("OK"))
+			return "Shopping Note is added Successfully";
+		return "Failed";
+	}
+
 	
 	
 	
@@ -370,34 +399,6 @@ public class Test {
 		}
 
 		return notes.toString();
-	}
-
-	@POST
-	@Path("/addShoppingNote")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String addShoppingNote(@FormParam("productToBuy") String productToBuy,
-			@FormParam("productCategory") String productCategory, @FormParam("userID") String userID)
-					throws org.json.simple.parser.ParseException {
-		String serviceUrl = "http://localhost:8888/restNotes/addShoppingNoteService";
-		// String serviceUrl =
-		// "http://2-dot-secondhelloworld-1221.appspot.com/rest/addShoppingNoteService";
-		java.util.Date date = new java.util.Date();
-		boolean isDone = false;
-		boolean isTextCategorized = false;
-		String noteType = "Shopping";
-		String urlParameters = "productToBuy=" + productToBuy + "&creationDate="
-				+ String.valueOf(new Timestamp(date.getTime())) + "&isDone=" + isDone + "&isTextCategorized="
-				+ isTextCategorized + "&noteType=" + noteType + "&userID=" + userID + "&productCategory="
-				+ productCategory;
-		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
-				"application/x-www-form-urlencoded;charset=UTF-8");
-		JSONParser parser = new JSONParser();
-		Object obj;
-		obj = parser.parse(retJson);
-		JSONObject object = (JSONObject) obj;
-		if (object.get("Status").equals("OK"))
-			return "Shopping Note is added Successfully";
-		return "Failed";
 	}
 
 	@POST
