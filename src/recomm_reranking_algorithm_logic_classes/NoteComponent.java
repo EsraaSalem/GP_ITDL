@@ -85,14 +85,10 @@ public class NoteComponent {
 		if (allNotes.size() > 0) {
 			if (lastUpdateDate == null) {
 				allInputs = getAllNotesWithoutRange(allNotes);
-				// lastDate.addLastUpdatePreferencesDate();
 			} else {
 				allInputs = getAllNotesWithinRange(allNotes, lastUpdateDate);
 			}
-			for (int i = 0; i < allInputs.size(); i++) {
 
-				System.out.println(allInputs.get(i).toString());
-			}
 			if (allInputs.size() == 0) {
 				System.out.println("There is NO Notes");
 			}

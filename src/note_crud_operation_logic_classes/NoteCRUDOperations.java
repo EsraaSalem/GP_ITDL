@@ -43,7 +43,6 @@ public class NoteCRUDOperations {
 		for (int i = 0; i < allNotes.size(); i++) {
 			JSONObject object;
 			object = (JSONObject) allNotes.get(i);
-			System.out.println(object.toJSONString());
 			if (object.containsKey(meeting)) {
 				JSONParser p = new JSONParser();
 				JSONObject object1 = (JSONObject) p.parse(object.get(meeting).toString());
@@ -55,24 +54,51 @@ public class NoteCRUDOperations {
 				notes.add(noteParser.convertJsonObjToOrdinaryNoteObj(object1));
 
 			} else if (object.containsKey(shopping)) {
-				System.out.println(shopping);
+				//System.out.println(shopping);
 				JSONParser p = new JSONParser();
 				JSONObject object1 = (JSONObject) p.parse(object.get(shopping).toString());
 				notes.add(noteParser.convertJsonObjToShoppingNoteObj(object1));
 
 			} else if (object.containsKey(deadline)) {
-				System.out.println(deadline);
+				//System.out.println(deadline);
 				JSONParser p = new JSONParser();
 				JSONObject object1 = (JSONObject) p.parse(object.get(deadline).toString());
 				notes.add(noteParser.convertJsonObjToDeadLineNoteObj(object1));
 			}
 		}
 
-		System.out.println("NOTES "+notes.toString());
+		//System.out.println("NOTES "+notes.toString());
 		
 		return notes;
 	}
+
 	
+
+	public Vector<NoteEntity> getShoppingNotesONLY(String userID) throws ParseException {
+
+		
+		NoteModel nm = new NoteModel();
+		JSONArray allNotes = nm.getAllNotes(userID);
+		
+		Vector<NoteEntity> notes = new Vector<NoteEntity>();
+
+		for (int i = 0; i < allNotes.size(); i++) {
+			JSONObject object;
+			object = (JSONObject) allNotes.get(i);
+			if (object.containsKey(shopping)) {
+				
+				JSONParser p = new JSONParser();
+				JSONObject object1 = (JSONObject) p.parse(object.get(shopping).toString());
+				notes.add(noteParser.convertJsonObjToShoppingNoteObj(object1));
+
+			} 
+		}
+
+		System.out.println("SHOPPING NOTES ONLY "+notes.toString());
+		
+		return notes;
+	}
+
 	
 
 }

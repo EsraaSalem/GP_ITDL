@@ -1,5 +1,7 @@
 package dataEntities;
 
+import com.google.api.server.spi.auth.common.User;
+
 public class UserInialWeights {
 
 	
@@ -8,7 +10,10 @@ public class UserInialWeights {
 	private String categoryName;
 	private String userID;
 	private String categoryRecordID;
-	
+	public void incrementTest()
+	{
+		inialWeight+=0;
+	}
 	public String getCategoryRecordID() {
 		return categoryRecordID;
 	}
@@ -31,7 +36,11 @@ public class UserInialWeights {
 		this.categoryName = "";
 	}
 	public double getInialWeight() {
-		return inialWeight;
+		String num1Str = String.format("%.5g%n", inialWeight);
+
+		double num1 = Double.parseDouble(num1Str);
+
+		return num1;
 	}
 	public void setInialWeight(double inialWeight) {
 		this.inialWeight = inialWeight;
@@ -53,6 +62,7 @@ public class UserInialWeights {
 		return "UserInialWeights [inialWeight=" + inialWeight + ", categoryID=" + categoryID + ", categoryName="
 				+ categoryName + ", userID=" + userID + ", categoryRecordID=" + categoryRecordID + "]";
 	}
+	
 	
 	 
 }

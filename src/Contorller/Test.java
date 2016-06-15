@@ -2,12 +2,9 @@ package Contorller;
 
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
 
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -19,24 +16,223 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.google.appengine.labs.repackaged.org.json.JSONException;
-import com.sun.org.apache.regexp.internal.recompile;
 
-import CRUD_oprations_Serivces.RankingInputs;
 import HTTPConnection.Connection;
 import Model.DefinedCategories;
-import Model.RankingInputsModel;
 import Model.NoteParser;
+import Model.RankingInputsModel;
+import TextCategorization_logic_classes.TextCategorization;
 import dataEntities.CategoryCountOfSources;
+import dataEntities.NearestStore;
 import dataEntities.NoteEntity;
-import recomm_reranking_algorithm_logic_classes.NoteComponent;
-import recomm_reranking_algorithm_logic_classes.RerankingAlgorithmLogic;
-import recomm_reranking_algorithm_logic_classes.TwitterComponent;
+import dataEntities.Offer;
+import dataEntities.UserInialWeights;
 import recomm_reranking_algorithm_logic_classes.UpdatePreferenceLastDate;;
 
 @Path("/")
 @Produces("text/html")
 public class Test {
 
+	
+	
+	
+	@POST
+	@Path("/getNearestStoresToUser")
+
+	public String getNearestStoresToUser(@FormParam("userID") String ID)
+			throws org.json.simple.parser.ParseException {
+
+		String serviceUrl = "http://localhost:8888/restOffer/getNearestStoresToUserService";
+
+		String urlParameters = "userID=" + ID;
+		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		Vector<NearestStore> nearStores = new Vector<NearestStore>();
+		nearStores = getParsesNearestStores(retJson);
+		System.out.println("---------------near store------------------------");
+		for(int i = 0 ; i < nearStores.size() ; i++)
+		{
+			System.out.println(nearStores.get(i).toString());
+		}
+		return retJson;
+
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+/**
+ * DONE final 
+ * ***/
+	@POST
+	@Path("/getTop3PreferencesController")
+	@Produces("text/html")
+	public String getTop3Preferences(@FormParam("userID") String userID)
+			throws org.json.simple.parser.ParseException, JSONException {
+
+	//	String serviceUrl = "http://4-dot-secondhelloworld-1221.appspot.com/restOffer/getTop3Preferences";
+		String serviceUrl = "http://localhost:8888/restOffer/getTop3Preferences";
+		
+		
+		String urlParameters = "userID=" + userID;
+		String res = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		JSONParser parser = new JSONParser();
+		Object obj;
+		obj = parser.parse(res);
+		JSONObject object = (JSONObject) obj;
+		String interests = "";
+		if(object.get("status").toString().equals("OK"))
+		{
+		 interests = object.get("result").toString();
+			Vector<UserInialWeights> userInterst = new Vector<UserInialWeights>();
+			userInterst = getParsedUserInitialWeights(interests);
+			for (int i = 0; i < userInterst.size(); i++) {
+				System.out.println(userInterst.get(i).toString());
+			}
+			
+		}
+		else
+		{
+			interests ="Failed";
+		}
+		return interests;
+
+	}
+/**
+ * DONE final
+ * **/
+	@POST
+	@Path("/getOffers")
+	@Produces("text/html")
+	public String getOffers(@FormParam("userID") String userID)
+			throws org.json.simple.parser.ParseException, JSONException {
+
+	//	String serviceUrl = "http://4-dot-secondhelloworld-1221.appspot.com/restOffer/getOfferService";
+		String serviceUrl = "http://localhost:8888/restOffer/getOfferService";
+		String urlParameters = "userID=" + userID;
+		String res = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		
+		Vector<Offer> offers = new Vector<Offer>();
+		offers = getParsedOffers(res);
+		System.out.println("----------Offers-----------------------");
+		for(int i = 0 ; i < offers.size() ; i++)
+		{
+			System.out.println(offers.get(i).toString());
+		}
+
+		return res;
+
+	}
+	
+	public Vector<Offer> getParsedOffers(String offersSTR) throws ParseException
+	{
+		JSONParser parser = new JSONParser();
+		Vector<Offer> result = new Vector<Offer>();
+		JSONArray jsonArray = (JSONArray) parser.parse(offersSTR.toString());
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject obj = new JSONObject();
+			obj = (JSONObject) jsonArray.get(i);
+			Offer offer = new Offer();
+			
+			offer.setOfferID(String.valueOf(obj.get("offerID")));
+			offer.setCategory(String.valueOf(obj.get("category")));
+			offer.setContent(String.valueOf(obj.get("content")));
+			offer.setStartDate(String.valueOf(obj.get("startDate")));
+			offer.setEndDate(String.valueOf(obj.get("endDate")));
+			offer.setStoreID(String.valueOf(obj.get("storeID")));
+			offer.setStoreLat(Double.valueOf(obj.get("storeLat").toString()));
+			offer.setStoreLong(Double.valueOf(obj.get("storeLong").toString()));
+			offer.setJsonStoreEmail(String.valueOf(obj.get("jsonStoreEmail")));
+			result.add(offer);
+			
+					
+		}
+		return result;
+	}
+	
+	
+	/****
+	 * DONE Final
+	 * ****/
+	@POST
+	@Path("/updateUserPreferences")
+
+	public String updateUserPerferences(@FormParam("userID") String ID, @FormParam("twitterID") String twitterID)
+			throws org.json.simple.parser.ParseException {
+
+		//String serviceUrl = "http://4-dot-secondhelloworld-1221.appspot.com/restRanking/updateUserPreferenceService";
+		String serviceUrl = "http://localhost:8888/restRanking/updateUserPreferenceService";
+
+		String urlParameters = "userID=" + ID + "&twitterID=" + twitterID;
+		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		if(!retJson.equals("empty"))
+		{
+			Vector<UserInialWeights> userInterst = new Vector<UserInialWeights>();
+			userInterst = getParsedUserInitialWeights(retJson);
+			
+			
+		}
+//	
+		
+		return retJson;
+
+	}
+	
+		
 	public static Vector<NoteEntity> notes;
 	public static JSONObject object;
 	final private String shopping = "Shopping";
@@ -47,9 +243,65 @@ public class Test {
 
 	public Test() {
 		noteParser = new NoteParser();
+
+	}
+	
+	
+	public Vector<UserInialWeights> getParsedUserInitialWeights(String str) throws ParseException {
+		JSONParser parser = new JSONParser();
+		Vector<UserInialWeights>  res = new Vector<UserInialWeights> ();
+		System.out.println("AAAAAAA  "+str);
+		JSONArray jsonArray = (JSONArray) parser.parse(str.toString());
+		
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject obj = new JSONObject();
+			obj = (JSONObject) jsonArray.get(i);
+			UserInialWeights uiw = new UserInialWeights();
+			uiw.setCategoryID(obj.get("categoryID").toString());
+			uiw.setCategoryName(obj.get("categoryName").toString());
+			uiw.setInialWeight(Double.parseDouble(obj.get("inialWeight").toString()));
+			uiw.setUserID(obj.get("userID").toString());
+			uiw.setCategoryRecordID(obj.get("categoryRecordID").toString());
+			
+		res.add(uiw);
+		}
+
+		return res;
+	}
+
+	public Vector<NearestStore> getParsesNearestStores(String nearestStoresSTR) throws ParseException
+	{
+		JSONParser parser = new JSONParser();
+		Vector<NearestStore> result = new Vector<NearestStore>();
+		JSONArray jsonArray = (JSONArray) parser.parse(nearestStoresSTR.toString());
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject obj = new JSONObject();
+			obj = (JSONObject) jsonArray.get(i);
+			NearestStore nearStore = new NearestStore();
+		
+			nearStore.setStoreName(String.valueOf(object.get("storeName")));
+			nearStore.setUserProductToBuy(String.valueOf(object.get("userProductToBuy")));
+			nearStore.setLat(Double.parseDouble(object.get("lat").toString()));
+			nearStore.setLongt(Double.parseDouble(object.get("longt").toString()));
+			
+			result.add(nearStore);
+			
+					
+		}
+		return result;
 	}
 
 	@POST
+	@Path("/cat")
+	@Produces("text/html")
+	public String cat(@FormParam("word") String word) throws org.json.simple.parser.ParseException, JSONException {
+
+		TextCategorization t = new TextCategorization();
+		String x = t.callTextCategoryAPI(word);
+		return x;
+
+	}
+		@POST
 	@Path("/runRankingAlgorithm")
 	@Produces("text/html")
 	public String runRankingAlgorithm() throws org.json.simple.parser.ParseException {
@@ -95,7 +347,6 @@ public class Test {
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject object;
 			object = (JSONObject) array.get(i);
-			System.out.println(object.toJSONString());
 			if (object.containsKey(meeting)) {
 				JSONParser p = new JSONParser();
 				JSONObject object1 = (JSONObject) p.parse(object.get(meeting).toString());
@@ -107,13 +358,11 @@ public class Test {
 				notes.add(noteParser.convertJsonObjToOrdinaryNoteObj(object1));
 
 			} else if (object.containsKey(shopping)) {
-				System.out.println(shopping);
 				JSONParser p = new JSONParser();
 				JSONObject object1 = (JSONObject) p.parse(object.get(shopping).toString());
 				notes.add(noteParser.convertJsonObjToShoppingNoteObj(object1));
 
 			} else if (object.containsKey(deadline)) {
-				System.out.println(deadline);
 				JSONParser p = new JSONParser();
 				JSONObject object1 = (JSONObject) p.parse(object.get(deadline).toString());
 				notes.add(noteParser.convertJsonObjToDeadLineNoteObj(object1));
@@ -225,9 +474,9 @@ public class Test {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String addOrdinaryNote(@FormParam("ordinaryNoteContent") String ordinaryNoteContent,
 			@FormParam("userID") String userID) throws org.json.simple.parser.ParseException {
-		String serviceUrl = "http://localhost:8888/restNotes/addOrdinaryNoteService";
-		// String serviceUrl =
-		// "http://2-dot-secondhelloworld-1221.appspot.com/rest/addOrdinaryNoteService";
+		//String serviceUrl = "http://localhost:8888/restNotes/addOrdinaryNoteService";
+		 String serviceUrl =
+		 "http://4-dot-secondhelloworld-1221.appspot.com/rest/addOrdinaryNoteService";
 		java.util.Date date = new java.util.Date();
 		boolean isDone = false;
 		boolean isTextCategorized = false;
@@ -237,6 +486,7 @@ public class Test {
 				+ isTextCategorized + "&noteType=" + noteType + "&userID=" + userID;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
+		System.out.println("NNNNNNNNNNNnn   "+retJson);
 		JSONParser parser = new JSONParser();
 		Object obj;
 		obj = parser.parse(retJson);
@@ -356,6 +606,7 @@ public class Test {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@POST
 	@Path("/enterInitialWeights1User")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -383,9 +634,7 @@ public class Test {
 		jsonObj1.put("categoryName", catname1);
 		jsonObj1.put("initialWeight", catratio1);
 		userInialWeights.add(jsonObj1);
-		
-		
-		
+
 		JSONObject jsonObj2 = new JSONObject();
 		jsonObj2.put("categoryName", catname2);
 		jsonObj2.put("initialWeight", catratio2);
@@ -432,13 +681,12 @@ public class Test {
 		userInialWeights.add(jsonObj12);
 
 		String userInitialWeightsSTR = userInialWeights.toString();
-		
-//		System.out.println("VVVVVVV  "+userID );
-//		System.out.println("KKKKKKKKKKKKKKKKKK  ");
-//		System.out.println(userInitialWeightsSTR);
-		String serviceUrl = "http://localhost:8888/restNotes/enterInitialWeightsForOneUserService";
 
-		//String serviceUrl = "http://4-dot-secondhelloworld-1221.appspot.com/restNotes/enterInitialWeightsForOneUserService";
+		
+//		String serviceUrl = "http://localhost:8888/restNotes/enterInitialWeightsForOneUserService";
+
+		 String serviceUrl =
+		 "http://4-dot-secondhelloworld-1221.appspot.com/restNotes/enterInitialWeightsForOneUserService";
 
 		String urlParameters = "userID=" + userID + "&userInitialWeightsSTR=" + userInitialWeightsSTR;
 
@@ -458,22 +706,7 @@ public class Test {
 
 	}
 
-	@POST
-	@Path("/updateUserPreferences")
-
-	public String updateUserPerferences(@FormParam("userID") String ID, @FormParam("twitterID") String twitterID)
-			throws org.json.simple.parser.ParseException {
-
-		String serviceUrl = "http://localhost:8888/restRanking/updateUserPreferenceService";
-		
-		String urlParameters = "userID="+ID+"&twitterID="+twitterID;
-		System.out.println("==============   Parameters   "+urlParameters);
-		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
-				"application/x-www-form-urlencoded;charset=UTF-8");
-		return retJson;
-
-	}
-
+	
 	@POST
 	@Path("/addDate")
 	public String addDate() {
@@ -526,6 +759,5 @@ public class Test {
 
 		return ccos.toString();
 	}
-	
-	
+
 }

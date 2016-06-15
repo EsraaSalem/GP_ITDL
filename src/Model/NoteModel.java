@@ -478,8 +478,6 @@ public class NoteModel {
 			}
 		}
 		
-		System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-		System.out.println(allNotes.toString());
 
 		return returnedJson;
 	}

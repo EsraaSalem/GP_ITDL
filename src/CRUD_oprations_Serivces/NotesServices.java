@@ -107,9 +107,12 @@ public class NotesServices {
 			@FormParam("meetingNoteDate") String meetingNoteDate,
 			@FormParam("estimatedTransportTime") String estimatedTransportTime) {
 
-		MeetingNoteEntity meetingNoteEntityObj = new MeetingNoteEntity(java.sql.Timestamp.valueOf(meetingNoteDate),
-				java.sql.Time.valueOf(estimatedTransportTime), meetingTitle, meetingPlace, meetingAgenda, "", userID,
-				java.sql.Timestamp.valueOf(creationDate), Boolean.valueOf(isDone), Boolean.valueOf(isTextCategorized),
+		MeetingNoteEntity meetingNoteEntityObj = new
+				MeetingNoteEntity(java.sql.Timestamp.valueOf(meetingNoteDate),
+				java.sql.Time.valueOf(estimatedTransportTime), meetingTitle, meetingPlace,
+				meetingAgenda, "", userID,
+				java.sql.Timestamp.valueOf(creationDate), Boolean.valueOf(isDone),
+				Boolean.valueOf(isTextCategorized),
 				noteType);
 
 		NoteModel nm = new NoteModel();
@@ -120,6 +123,8 @@ public class NotesServices {
 			object.put("Status", "OK");
 		else
 			object.put("Status", "Fail");
+		
+		
 
 		return object.toString();
 	}

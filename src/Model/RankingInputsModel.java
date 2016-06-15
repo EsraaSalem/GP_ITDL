@@ -3,18 +3,6 @@ package Model;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Vector;
-
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Transaction;
-import com.google.appengine.labs.repackaged.org.json.JSONException;
-
-import java.util.List;
 import java.util.Vector;
 
 import org.json.simple.JSONArray;
@@ -26,24 +14,53 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
-import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Transaction;
-import com.google.apphosting.datastore.DatastoreV4.LookupRequest;
+import com.google.appengine.labs.repackaged.org.json.JSONException;
 
 import TextCategorization_logic_classes.TextCategorization;
-import dataEntities.NoteEntity;
 import dataEntities.PairComparison;
 import dataEntities.UserInialWeights;
 
 public class RankingInputsModel {
+
+	public void updateUserInterestAfterRunAlgo(Vector<UserInialWeights> userInitialWeights) {
+
+		for(int i = 0 ; i < userInitialWeights.size() ; i++)
+		{
+			userInitialWeights.get(i).incrementTest();
+			updatePreference(userInitialWeights.get(i));
+		}
+	}
+	public void updatePreference(UserInialWeights u)
+	{
+		Key k = KeyFactory.createKey("userInitialWeights", Long.parseLong(u.getCategoryRecordID()));
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		Transaction txn = datastore.beginTransaction();
+		try {
+			datastore.get(k);
+			Entity note = datastore.get(k);
+			note.setProperty("userID", u.getUserID());
+			note.setProperty("categoryID", u.getCategoryID());
+			note.setProperty("categoryName", u.getCategoryName());
+			note.setProperty("initialWeight", u.getInialWeight());
+
+			datastore.put(note);
+			txn.commit();
+			
+		} catch (EntityNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+	}
 
 	/**
 	 * this is the final function which you will use in the ranking algrithm
@@ -63,18 +80,17 @@ public class RankingInputsModel {
 		pq = datastore.prepare(q);
 
 		for (Entity entity : pq.asIterable()) {
-		//	System.out.println(entity.toString());
+			
 			UserInialWeights uiw = new UserInialWeights();
 			uiw.setCategoryRecordID(String.valueOf(entity.getKey().getId()));
+			
 			uiw.setCategoryID(entity.getProperty("categoryID").toString().trim());
 			uiw.setCategoryName(entity.getProperty("categoryName").toString().trim());
 
 			uiw.setUserID(entity.getProperty("userID").toString().trim());
 			uiw.setInialWeight(Double.parseDouble(entity.getProperty("initialWeight").toString().trim()));
-			//System.out.println("TTTTTTTTTTTTTTTTTTTTTTt  = " + uiw.toString());
 			userInitialWeights.add(uiw);
 		}
-		System.out.println("SIZEeeeeeeeeeeeeeeeee    userInitialWeights   " + userInitialWeights.size());
 		return userInitialWeights;
 	}
 
@@ -103,11 +119,7 @@ public class RankingInputsModel {
 
 		}
 
-//		System.out.println("PPPPPPPPPPPPPPPP_------Ranking input model ---------PPPPPPPPPPPPPPPPP");
-//		for (int i = 0; i < pcVector.size(); i++) {
-//			System.out.println(pcVector.get(i).toString());
-//		}
-//		System.out.println("PPPPPPPPPPPPPPPP_------Ranking input model ---------PPPPPPPPPPPPPPPPP");
+	
 		return pcVector;
 
 	}
@@ -146,8 +158,8 @@ public class RankingInputsModel {
 	 **/
 	public Vector<PairComparison> readFile() {
 
-		InputStream input = this.getClass().getClassLoader()
-				.getResourceAsStream("war/WEB-INF/classes/pairwisecomparison.txt");
+//		InputStream input = this.getClass().getClassLoader()
+//				.getResourceAsStream("war/WEB-INF/classes/pairwisecomparison.txt");
 		// "src\\inputs\\pairwisecomparison.txt"
 		String fileName = "C:\\Users\\Esraa\\Coding workspace\\GP_IntelligentToDoList\\pairwisecomparison.txt";
 		// String relativeWebPath = "/STUFF/read.txt";
@@ -218,26 +230,16 @@ public class RankingInputsModel {
 		TextCategorization tc = new TextCategorization();
 		JSONArray jsonArray = (JSONArray) parser.parse(jsonArraySTR.toString());
 
-		// System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
-		// System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
-		// for (int i = 0; i < jsonArray.size(); i++) {
-		// JSONObject o = (JSONObject) jsonArray.get(i);
-		// System.out.println(o.toString());
-		// }
-		// System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
-		// System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+		
 		double sumArt = 0.0;
 		int counter = 0;
 
-		System.out.println("Length BEFORE:  " + jsonArray.size());
 		for (int i = 0; i < jsonArray.size(); i++) {
-			
+
 			JSONObject o = (JSONObject) jsonArray.get(i);
 			String categoryName = o.get("categoryName").toString();
 			String definedCategory = tc.callTextCategoryAPI(categoryName);
-			
-			System.out.println(categoryName + "        " + definedCategory);
-			System.out.println("________________________________S__________________________");
+
 			if (definedCategory.equals(artCategory)) {
 				double ratio = Double.parseDouble(o.get("initialWeight").toString());
 				sumArt += ratio;
@@ -246,17 +248,14 @@ public class RankingInputsModel {
 				o.put("categoryName", definedCategory);
 				jsonArray.set(i, o);
 			}
-			if(definedCategory.equals(hobbiesCategory))
-			{
+			if (definedCategory.equals(hobbiesCategory)) {
 				o.put("categoryName", definedCategory);
 				jsonArray.set(i, o);
 
 			}
 
-			// System.out.println("AAAAAAAAAAAAAAAAAAAAAA= "+o.toString());
-
+			
 		}
-		System.out.println("Length After:  " + jsonArray.size());
 		JSONArray newJsonArray = new JSONArray();
 		for (int i = 0; i < jsonArray.size(); i++) {
 			JSONObject o = (JSONObject) jsonArray.get(i);
@@ -269,10 +268,9 @@ public class RankingInputsModel {
 			}
 		}
 
-		System.out.println("Array 2 Before adding art and entertainment   size  = " + newJsonArray.size());
-		JSONObject o2 = new JSONObject();
+	JSONObject o2 = new JSONObject();
 
-		String num1Str = String.format("%.3g%n", (double) (sumArt / counter));
+		String num1Str = String.format("%.5g%n", (double) (sumArt / counter));
 
 		double num1 = Double.parseDouble(num1Str);
 
@@ -284,13 +282,7 @@ public class RankingInputsModel {
 		o2.put("categoryID", categoryID);
 		newJsonArray.add(o2);
 
-		System.out.println("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
-		for (int i = 0; i < newJsonArray.size(); i++) {
-			System.out.println(newJsonArray.get(i).toString());
-		}
-
-		String userInitialWeightNew = newJsonArray.toString();
-
+		
 		for (int i = 0; i < newJsonArray.size(); i++) {
 			JSONObject o = (JSONObject) newJsonArray.get(i);
 			boolean result = addUserInitialWeightsInDB(userID, o);
@@ -311,60 +303,25 @@ public class RankingInputsModel {
 
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
-	
-			Entity entity = new Entity("userInitialWeights");
 
-			String categoryName = String.valueOf(obj.get("categoryName"));
-			String categoryID = String.valueOf(obj.get("categoryID"));
-			String ratio = String.valueOf(obj.get("initialWeight"));
+		Entity entity = new Entity("userInitialWeights");
 
-			entity.setProperty("userID", userID);
-			entity.setProperty("categoryName", categoryName);
-			entity.setProperty("categoryID", categoryID);
-			entity.setProperty("initialWeight", ratio);
+		String categoryName = String.valueOf(obj.get("categoryName"));
+		String categoryID = String.valueOf(obj.get("categoryID"));
+		String ratio = String.valueOf(obj.get("initialWeight"));
 
-			datastore.put(entity);
-			txn.commit();
-		
-	// catch (Exception e) {
-	//
-	// return false;
-	// }
+		entity.setProperty("userID", userID);
+		entity.setProperty("categoryName", categoryName);
+		entity.setProperty("categoryID", categoryID);
+		entity.setProperty("initialWeight", ratio);
 
-	return true;
+		datastore.put(entity);
+		txn.commit();
 
-}
 
-// public boolean add1UserInitialWeightsDB(String userID, JSONObject
-// jsonObj, int i) {
-//
-// System.out.println("i = " + i);
-//
-// // System.out.println("22222222222222222222222");
-// DatastoreService datastore =
-// DatastoreServiceFactory.getDatastoreService();
-// Transaction txn = datastore.beginTransaction();
-// try {
-// Entity entity = new Entity("userInitialWeights");
-//
-// entity.setProperty("userID", userID);
-// //entity.setProperty("categoryID", String.valueOf(categoryID));
-// entity.setProperty("categoryName",
-// String.valueOf(jsonObj.get("categoryName")));
-// entity.setProperty("initialWeight",
-// String.valueOf(jsonObj.get("initialWeight")));
-//
-// System.out.println("UUUUUUUUUUUUUUUUU " + entity.toString());
-// datastore.put(entity);
-// txn.commit();
-// } finally {
-// if (txn.isActive()) {
-// txn.rollback();
-// return false;
-// }
-//
-// }
-// return true;
-// }
+		return true;
+
+	}
+
 
 }

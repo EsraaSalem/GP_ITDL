@@ -4,13 +4,10 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Vector;
 
-import javax.persistence.criteria.CriteriaBuilder.In;
-
 import org.json.simple.parser.ParseException;
 
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 
-import Model.NoteModel;
 import TextCategorization_logic_classes.TextCategorization;
 import dataEntities.InputType;
 import twitter4j.Status;
@@ -29,25 +26,27 @@ public class TwitterComponent {
 		textcategorization = new TextCategorization();
 	}
 
-	public Vector<InputType> getAllTweets(List<Status> statuses) {
+	public Vector<InputType> getAllTweets(List<Status> statuses) throws JSONException, ParseException {
 
 		Vector<InputType> allInputs = new Vector<InputType>();
-		for (int i = 0; i < statuses.size(); i++) {
+		 int limit = statuses.size();
+		//int limit = 10;
+		for (int i = 0; i < limit; i++) {
 			InputType input = new InputType();
 			java.util.Date tweetDate = statuses.get(i).getCreatedAt();
 			Timestamp tweetCreationDate = new Timestamp(tweetDate.getTime());
 			input.setCreationDate(tweetCreationDate);
 			input.setSourcetype("tweet");
 			input.setText(statuses.get(i).getText());
+
 			try {
 				input.setTextCategory(textcategorization.callTextCategoryAPI(statuses.get(i).getText()));
 			} catch (JSONException | ParseException e) {
 				// TODO Auto-generated catch block
 
 			}
-			//System.out.println("ALLLLLLLLLLLLLLLLLLLLLLLLL ");
-			//System.out.println(input.toString());
 			allInputs.add(input);
+
 		}
 		return allInputs;
 
@@ -63,8 +62,6 @@ public class TwitterComponent {
 			Timestamp tweetCreationDate = new Timestamp(tweetDate.getTime());
 
 			if (lastDate.isWithinRange(todayDate, lastUpdateDate, tweetCreationDate)) {
-				System.out.println("SSSSSSSSSs    " + tweetCreationDate);
-				System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
 
 				input.setCreationDate(tweetCreationDate);
 				input.setSourcetype("tweet");
@@ -75,7 +72,6 @@ public class TwitterComponent {
 					// TODO Auto-generated catch block
 
 				}
-				System.out.println(input.toString());
 				allInputs.add(input);
 			}
 		}
@@ -83,7 +79,8 @@ public class TwitterComponent {
 
 	}
 
-	public Vector<InputType> extractTweets(String twitterID, Timestamp lastUpdateDate) {
+	public Vector<InputType> extractTweets(String twitterID, Timestamp lastUpdateDate)
+			throws JSONException, ParseException {
 
 		// Timestamp lastUpdateDate = lastDate.getLastUpdatePreferneceDate();
 
@@ -104,26 +101,12 @@ public class TwitterComponent {
 
 			User user = twitter.verifyCredentials();
 			List<Status> statuses = twitter.getUserTimeline(twitterID);
-			// for (int i = 0; i < statuses.size(); i++) {
-			// java.util.Date tweetDate = statuses.get(i).getCreatedAt();
-			// Timestamp tweetCreationDate = new Timestamp(tweetDate.getTime());
-			// // System.out.println("today date: " + todayDate.toString());
-			// //
-			// // System.out.println("tweet date: " +
-			// // tweetCreationDate.toString());
-			// // System.out.println("lastUpdateDate: " +
-			// // lastUpdateDate.toString());
-			// // System.out.println("Text = " + statuses.get(i).getText());
-			// System.out.println("-----------------------------------------------------------------------");
-			// }
 
 			if (statuses.size() > 0) {
 				if (lastUpdateDate == null) {
-					System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNNNNN");
 					allInputs = getAllTweets(statuses);
-					// lastDate.addLastUpdatePreferencesDate();
 				} else {
-					System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+					
 					allInputs = getTweetsWithin(statuses, lastUpdateDate);
 				}
 
@@ -131,16 +114,13 @@ public class TwitterComponent {
 					System.out.println("there is No tweets");
 				}
 			}
-			// getTweetsWithin(statuses, lastUpdateDate);
+
 		} catch (TwitterException te) {
-			// te.printStackTrace();
-			// System.out.println("Failed to get timeline: " + te.getMessage());
-			// System.exit(-1);
+			
 			System.out.println("Error ocurred");
 			return null;
 		}
 
-		System.out.println("Sizeeeeeeeeeeeeeeee =  " + allInputs.size());
 		return allInputs;
 	}
 

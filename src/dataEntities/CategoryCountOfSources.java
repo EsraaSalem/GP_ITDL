@@ -39,7 +39,7 @@ public class CategoryCountOfSources {
 	}
 
 	public String getCategoryName() {
-		return categoryName;
+		return categoryName.toLowerCase().trim();
 	}
 
 	public void setCategoryName(String categoryName) {
@@ -66,9 +66,15 @@ public class CategoryCountOfSources {
 	}
 	@Override
 	public String toString() {
-		return "CategoryCountOfSources [categoryID=" + categoryID + ", categoryCount=" + categoryCount
-				+ ", categoryName=" + categoryName + ", noteSrcCount=" + noteSrcCount + ", twitterSrcCount="
-				+ twitterSrcCount + ", facebookSrcCount=" + facebookSrcCount + "]";
+		
+		
+		String r = "category ID = "+ categoryID +"\n"+
+				"category Name = "+ categoryName +"\n"+
+				"note Src Count = "+ noteSrcCount +"\n"+
+				"twitter Src Count = "+ twitterSrcCount +"\n"+
+				"facebook Src Count = "+ facebookSrcCount +"\n"+
+				"-----------------------------------------------\n";
+		return r;
 	}
 
 	public int getNoteSrcCount() {

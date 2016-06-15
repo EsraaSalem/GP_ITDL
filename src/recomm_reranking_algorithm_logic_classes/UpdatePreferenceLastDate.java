@@ -7,6 +7,9 @@ import org.json.simple.parser.ParseException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Transaction;
@@ -27,6 +30,16 @@ public class UpdatePreferenceLastDate {
 	final private String deadline = "DeadLine";
 	final private String meeting = "Meeting";
 	private NoteModel noteModel_DB;
+
+	private String lastDateRecordID;
+
+	public String getLastDateRecordID() {
+		return lastDateRecordID;
+	}
+
+	public void setLastDateRecordID(String lastDateRecordID) {
+		this.lastDateRecordID = lastDateRecordID;
+	}
 
 	public UpdatePreferenceLastDate() {
 		noteModel_DB = new NoteModel();
@@ -60,6 +73,7 @@ public class UpdatePreferenceLastDate {
 
 		String textCategory = textCategorization.callTextCategoryAPI(noteText);
 
+		System.out.println("11111111111111111   " + textCategory + "   " + noteText);
 		noteModel_DB.noteIsTextCategorized(note.getNoteID());
 		input.setCreationDate(noteCreationDate);
 		input.setSourcetype("note");
@@ -70,7 +84,47 @@ public class UpdatePreferenceLastDate {
 	}
 
 	public Timestamp addLastUpdatePreferencesDate(String userID) {
-		resetLastUpdatePrferencesDateTable();
+
+		Timestamp t = null;
+		if (lastDateRecordID == null) {
+			
+			t = addDate(userID);
+		} else
+
+		{
+			t = updateDate(userID);
+		
+		}
+		// resetLastUpdatePrferencesDateTable();
+		return t;
+	}
+
+	public Timestamp updateDate(String userID) {
+
+		java.util.Date date = new java.util.Date();
+		Timestamp todayDate = new Timestamp(date.getTime());
+		Key k = KeyFactory.createKey("lastUpdatePrferencesDate", Long.parseLong(lastDateRecordID));
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		Transaction txn = datastore.beginTransaction();
+		try {
+			datastore.get(k);
+			Entity entity = datastore.get(k);
+			entity.setProperty("lastdate", todayDate.toString());
+			entity.setProperty("userID", userID);
+
+			datastore.put(entity);
+			txn.commit();
+
+		} catch (EntityNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return todayDate;
+	}
+
+	public Timestamp addDate(String userID) {
+		// resetLastUpdatePrferencesDateTable();
 		java.util.Date date = new java.util.Date();
 		Timestamp todayDate = new Timestamp(date.getTime());
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -113,11 +167,13 @@ public class UpdatePreferenceLastDate {
 			String userIDDB = entity.getProperty("userID").toString().trim();
 			if (userIDDB.equals(userID)) {
 				System.out.println(entity.toString());
+				lastDateRecordID = String.valueOf(entity.getKey().getId());
 				timeStamp = java.sql.Timestamp.valueOf(entity.getProperty("lastdate").toString());
 				break;
 			}
 
 		}
+		System.out.println("NNNNNNNNNNNN   " + lastDateRecordID);
 		// if(timeStamp == null)
 		// {
 		// return addLastUpdatePreferencesDate();

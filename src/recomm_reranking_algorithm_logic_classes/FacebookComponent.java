@@ -98,9 +98,9 @@ public class FacebookComponent {
 	public Vector<InputType> extractFacebook(String userID, Timestamp lastUpdateDate) {
 		Vector<InputType> allInput = new Vector<InputType>();
 		Vector<FacebookPost> userPosts = new Vector<FacebookPost>();
+		userPosts = callGetUserFBPostWebService(userID);
 
 		if (userPosts.size() > 0) {
-			userPosts = callGetUserFBPostWebService(userID);
 			if (lastUpdateDate == null) {
 				allInput = getAllPost(userPosts);
 			} else {
@@ -109,6 +109,10 @@ public class FacebookComponent {
 			if (allInput.size() == 0) {
 				System.out.println("There is NO Posts");
 			}
+		}
+		else
+		{
+			System.out.println("no posts you did not call the api");
 		}
 		return allInput;
 

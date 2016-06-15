@@ -59,13 +59,16 @@ public class TextCategorization {
 	public String callTextCategoryAPI(String textinput) throws JSONException, ParseException {
 
 		String sentenceClass = classifyByAlchemy(textinput);
-		if (sentenceClass.equals("")) {
+		
+	//	System.out.println("sentenceClass  = "+sentenceClass);
+		if (sentenceClass.equals("") || sentenceClass.equals("NoCategory")) {
 			sentenceClass = classifyByUclassify(textinput);
 			sentenceClass = classifyByAlchemy(sentenceClass);
 		}
 		if (sentenceClass == null) {
 			sentenceClass = "";
 		}
+		//System.out.println("sentenceClass  = "+sentenceClass);
 
 		return sentenceClass;
 

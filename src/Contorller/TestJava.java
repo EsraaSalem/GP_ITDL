@@ -58,12 +58,15 @@ public class TestJava {
 		 
 		java.util.Date date = new java.util.Date();
 		Timestamp t = new Timestamp(date.getTime());
+		String s1 = "2016-06-15";
+		String s2 = "18:23:55";
+		//Timestamp ddd = java.sql.Timestamp.valueOf(s1)
 		Timestamp ttt = java.sql.Timestamp.valueOf("2016-06-15 18:23:55.664");
 		// new Timestamp(date.getTime());//
 		String x = String.valueOf(new Timestamp(date.getTime()));
 		System.out.println("Date  = " + date + "    xx = " + x + "    ppp   = " + date.getTime());
 		System.out.println("time stamp = " + t);
-		int ddd = t.getDate();
+		int dd = t.getDate();
 		System.out.println("ttt = " + ttt.toString());
 		System.out.println(ttt.compareTo(t));
 		String timeStamp = new SimpleDateFormat("yyyy/MM/dd").format(new java.util.Date());

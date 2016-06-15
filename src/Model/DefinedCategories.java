@@ -131,7 +131,6 @@ public class DefinedCategories {
 		Query gaeQuery = new Query("Category").setFilter(propertyFilter);
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 
-		// System.out.println("VVVVVVVVVVVVVVVVVVVVVVVVVV");
 		Vector<Entity> e = new Vector<Entity>();
 		for (Entity entity : pq.asIterable()) {
 			e.add(entity);
@@ -141,15 +140,6 @@ public class DefinedCategories {
 			categoryID = String.valueOf(entity.getKey().getId());
 		}
 		
-		// System.out
-		// .println("AAA = " + entity.getKey().toString() + " " +
-		// entity.getProperty("categoryName").toString());
-		// System.out.println("BBB = " + entity.getKey().getId());
-		// System.out.println("CCC = " +
-		// String.valueOf(entity.getKey().getId()));
-
-		
-		// categoryID = entity.getKey().toString();
 		return categoryID;
 	}
 
@@ -175,11 +165,9 @@ public class DefinedCategories {
 			category.setCategoryName(String.valueOf(entity.getProperty("categoryName")).trim().toLowerCase());
 			category.setCategoryID(String.valueOf(entity.getKey().getId()));
 
-			System.out.println(category.toString());
 			allCategories.add(category);
 
 		}
-		System.out.println("categories Sizeeeeeeeeeeee   =  " + allCategories.size());
 
 		return allCategories;
 

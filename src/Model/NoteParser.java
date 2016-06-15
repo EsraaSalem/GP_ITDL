@@ -42,7 +42,7 @@ public class NoteParser {
 				java.sql.Timestamp.valueOf(jsonObj.get("creationDate").toString()),
 				Boolean.valueOf(jsonObj.get("isDone").toString()),
 				Boolean.valueOf(jsonObj.get("isTextCategorized").toString()), jsonObj.get("noteType").toString(),
-				jsonObj.get("productToBuy").toString(), jsonObj.get("productCategory").toString());
+				jsonObj.get("productToBuy").toString(), jsonObj.get("productCategory").toString().toLowerCase().trim());
 
 	}
 

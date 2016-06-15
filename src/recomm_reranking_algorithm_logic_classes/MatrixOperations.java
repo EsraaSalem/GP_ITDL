@@ -20,10 +20,10 @@ public class MatrixOperations {
 
 		for (int i = 0; i < numOfRows; i++) {
 
-			String num1Str = String.format("%.3g%n", previous.get(i, 0));
+			String num1Str = String.format("%.5g%n", previous.get(i, 0));
 
 			double num1 = Double.parseDouble(num1Str);
-			String num2Str = String.format("%.3g%n", current.get(i, 0));
+			String num2Str = String.format("%.5g%n", current.get(i, 0));
 
 			double num2 = Double.parseDouble(num2Str);
 			if (num1 != num2)
@@ -33,13 +33,13 @@ public class MatrixOperations {
 		return true;
 	}
 
-	public Matrix getEignVector(Matrix firstSquaredMatrix, Matrix inialVector) {
+	public Matrix getEignVector(Matrix firstSquaredMatrix, Matrix inialVector, int r, int c) {
 		int i = 0;
-		Matrix vector = new Matrix(nRows, 1);
+		Matrix vector = new Matrix(r, 1);
 		while (i < 3) {
 
 			firstSquaredMatrix = getMatrixSquared(firstSquaredMatrix);
-			vector = getOneDMatrixOfRowSum(firstSquaredMatrix);
+			vector = getOneDMatrixOfRowSum(firstSquaredMatrix,r,c);
 
 			double totalSum = getTotalSumOfColumn(vector); 
 
@@ -65,6 +65,8 @@ public class MatrixOperations {
 	}
 
 	public Matrix getInialWeightMatrix(Vector<PairComparison> pc, int r, int c) {
+		
+	
 		Matrix matrix = new Matrix(r, c);
 		int k = 0;
 		for (int i = 0; i < r; i++) {
@@ -94,10 +96,10 @@ public class MatrixOperations {
 			matrix.set(i, 0, (double) categoryCounts.get(i).getNoteSrcCount());
 			matrix.set(i, 1, (double) categoryCounts.get(i).getTwitterSrcCount());
 			matrix.set(i, 2, (double) categoryCounts.get(i).getFacebookSrcCount());
-
 		}
 		double sum = 0;
 
+		//this is matrix normalization
 		for (int i = 0; i < categoryCounts.size(); i++) {
 
 			for (int j = 0; j < numOfSources; j++) {
@@ -125,13 +127,13 @@ public class MatrixOperations {
 		return matrix.times(matrix);
 	}
 
-	public Matrix getOneDMatrixOfRowSum(Matrix matrix) {
+	public Matrix getOneDMatrixOfRowSum(Matrix matrix, int r, int c) {
 
-		Matrix sumRowsMatrix = new Matrix(nRows, 1);
+		Matrix sumRowsMatrix = new Matrix(r, 1);
 
-		for (int i = 0; i < nRows; i++) {
+		for (int i = 0; i < r; i++) {
 			double sum = 0.0;
-			for (int j = 0; j < nCols; j++) {
+			for (int j = 0; j < c; j++) {
 				sum += matrix.get(i, j);
 
 			}
@@ -143,7 +145,7 @@ public class MatrixOperations {
 
 	public Matrix getOneDMatrixOfRowSum(Matrix matrix, int r) {
 
-		Matrix sumRowsMatrix = new Matrix(4, 1);
+		Matrix sumRowsMatrix = new Matrix(r, 1);
 
 		for (int i = 0; i < r; i++) {
 			double sum = 0.0;
@@ -184,22 +186,22 @@ public class MatrixOperations {
 		return matrix;
 	}
 
-	public Matrix getFianlWeightMatrixCriteria(Matrix sourceWeights, Matrix categoiesWeights, Matrix userInialWeights) {
+	public Matrix getFianlWeightMatrixCriteria(Matrix sourceWeights, Matrix categoiesWeights, Matrix userInialWeights,int limit) {
 
-		
-		for (int i = 0; i < 10; i++) {
+		Matrix result = new Matrix(limit,1);
+		for (int i = 0; i < limit; i++) {
 			for (int j = 0; j < nCols; j++) {
 
-				String num1Str = String.format("%.2g%n", sourceWeights.get(j, 0));
+				String num1Str = String.format("%.5g%n", sourceWeights.get(j, 0));
 				double num1 = Double.parseDouble(num1Str);
 
-				String num2Str = String.format("%.2g%n", categoiesWeights.get(i, j));
+				String num2Str = String.format("%.5g%n", categoiesWeights.get(i, j));
 				double num2 = Double.parseDouble(num2Str);
 
-				String num3Str = String.format("%.2g%n", userInialWeights.get(j, 0));
+				String num3Str = String.format("%.5g%n", userInialWeights.get(i, 0));
 				double num3 = Double.parseDouble(num3Str);
 
-				double newRatio = num1 * num2 * num3;
+				double newRatio = (num1 + num2)* num3;
 				categoiesWeights.set(i, j, newRatio);
 			}
 		}
@@ -227,19 +229,5 @@ public class MatrixOperations {
 		this.nCols = nCols;
 	}
 
-	// public void sortUserPreferences(Matrix finalWeightsMatrix) {
-	// Vector<UserRankedPreferences> userRankedPreferences = new
-	// Vector<UserRankedPreferences>();
-	// InputPrepration ip = new InputPrepration();
-	// Vector<CategoryCountOfSources> categoryCounts = new
-	// Vector<CategoryCountOfSources>();
-	// categoryCounts = ip.getCategoryCounts();
-	// for (int i = 0; i < 4; i++) {
-	// userRankedPreferences.add(new UserRankedPreferences(i,
-	// finalWeightsMatrix.get(i, 0)));
-	// }
-	//
-	// Collections.sort(userRankedPreferences);
-	// System.out.println("after sort: \n" + userRankedPreferences.toString());
-	// }
+
 }
