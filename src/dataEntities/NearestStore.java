@@ -5,6 +5,13 @@ public class NearestStore {
 	
 	private String storeName;
 	private String userProductToBuy;
+	private String category;
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
 	private double lat;
 	private double longt;
 	
@@ -42,6 +49,11 @@ public class NearestStore {
 	}
 	public void setLongt(double longt) {
 		this.longt = longt;
+	}
+	@Override
+	public String toString() {
+		return "NearestStore [storeName=" + storeName + ", userProductToBuy=" + userProductToBuy + ", lat=" + lat
+				+ ", longt=" + longt + "]";
 	}
 	
 	

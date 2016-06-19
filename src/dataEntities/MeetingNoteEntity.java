@@ -1,27 +1,40 @@
 package dataEntities;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+
+import org.json.simple.JSONObject;
 
 public class MeetingNoteEntity extends NoteEntity {
 
 	
 
-	private Timestamp meetingNoteDate; 
-	private Time estimatedTransportTime;	
-	private String meetingTitle;
-	private String meetingPlace;
-	private String meetingAgenda;
+	protected Timestamp meetingNoteDate; 
+	protected Time estimatedTransportTime;	
+	protected String meetingTitle;
+	protected String meetingPlace;
+	protected String meetingAgenda;
 	
 	
 	
+	
+
 	@Override
 	public String toString() {
 		return "MeetingNoteEntity [meetingNoteDate=" + meetingNoteDate + ", estimatedTransportTime="
 				+ estimatedTransportTime + ", meetingTitle=" + meetingTitle + ", meetingPlace=" + meetingPlace
-				+ ", meetingAgenda=" + meetingAgenda + ", noteID=" + noteID + ", userID=" + userID + ", creationDate="
-				+ creationDate + ", isDone=" + isDone + ", isActive=" + isActive + ", isTextCategorized="
-				+ isTextCategorized + ", noteType=" + noteType + "]";
+				+ ", meetingAgenda=" + meetingAgenda + ", servernoteID=" + servernoteID + ", userID=" + userID
+				+ ", creationDate=" + creationDate + ", isDone=" + isDone + ", isTextCategorized=" + isTextCategorized
+				+ ", noteType=" + noteType + "]";
+	}
+
+	public Timestamp getMeetingNoteDate() {
+		return meetingNoteDate;
+	}
+
+	public void setMeetingNoteDate(Timestamp meetingNoteDate) {
+		this.meetingNoteDate = meetingNoteDate;
 	}
 
 	public MeetingNoteEntity() {
@@ -79,8 +92,7 @@ public class MeetingNoteEntity extends NoteEntity {
 	public void setMeetingAgenda(String meetingAgenda) {
 		this.meetingAgenda = meetingAgenda;
 	}
-	
-	
+
 	
 	
 

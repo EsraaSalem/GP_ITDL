@@ -73,8 +73,8 @@ public class UpdatePreferenceLastDate {
 
 		String textCategory = textCategorization.callTextCategoryAPI(noteText);
 
-		System.out.println("11111111111111111   " + textCategory + "   " + noteText);
-		noteModel_DB.noteIsTextCategorized(note.getNoteID());
+		//System.out.println("11111111111111111   " + textCategory + "   " + noteText);
+		noteModel_DB.noteIsTextCategorized(note.getServernoteID());
 		input.setCreationDate(noteCreationDate);
 		input.setSourcetype("note");
 		input.setTextCategory(textCategory);

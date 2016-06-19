@@ -1,5 +1,6 @@
 package Model;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Vector;
 
@@ -226,23 +227,14 @@ public class NoteModel {
 		Key k = KeyFactory.createKey("Note", Long.parseLong(noteID));
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
-		try {
-			datastore.get(k);
-			Entity note = datastore.get(k);
-			note.setProperty("isActive", "false");
-			datastore.put(note);
-			txn.commit();
-			return true;
-		} catch (EntityNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return false;
+		datastore.delete(k);
+		txn.commit();
+		
+		return true;
 	}
 	
 	public boolean noteIsDone(String noteID) {
-
+		
 		Key k = KeyFactory.createKey("Note", Long.parseLong(noteID));
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
@@ -253,6 +245,33 @@ public class NoteModel {
 			datastore.put(note);
 			txn.commit();
 			return true;
+		} catch (EntityNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	
+	}
+	public  boolean updateCreationDateAndIsDone(String noteID) {
+
+		
+		Key k = KeyFactory.createKey("Note", Long.parseLong(noteID));
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		Transaction txn = datastore.beginTransaction();
+		try {
+			datastore.get(k);
+			Entity note = datastore.get(k);
+			note.setProperty("isDone", "false");
+			
+			java.util.Date date = new java.util.Date();
+			String newCreationDate = String.valueOf(new Timestamp(date.getTime()));
+			note.setProperty("creationDate", newCreationDate);
+			datastore.put(note);
+			txn.commit();
+			
+			return true;
+			
+			
 		} catch (EntityNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -280,11 +299,13 @@ public class NoteModel {
 		return false;
 	}
 
-	public boolean addOrdinaryNote(OrdinaryNoteEntity ordinaryNoteObj) {
+	public long addOrdinaryNote(OrdinaryNoteEntity ordinaryNoteObj) {
+		
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
+		Entity entity ;
 		try {
-			Entity entity = new Entity("Note");
+			 entity = new Entity("Note");
 
 			entity.setProperty("userID", ordinaryNoteObj.getUserID());
 			entity.setProperty("creationDate", String.valueOf(ordinaryNoteObj.getCreationDate()));
@@ -292,7 +313,6 @@ public class NoteModel {
 			entity.setProperty("isTextCategorized", String.valueOf(ordinaryNoteObj.isTextCategorized()));
 			entity.setProperty("noteType", ordinaryNoteObj.getNoteType());
 			entity.setProperty("noteContent", ordinaryNoteObj.getNoteContent());
-			entity.setProperty("isActive", String.valueOf(true));
 
 			datastore.put(entity);
 			txn.commit();
@@ -301,16 +321,17 @@ public class NoteModel {
 				txn.rollback();
 			}
 		}
-		return true;
+		return entity.getKey().getId();
 	}
 
-	public boolean addShoppingNote(ShoppingNoteEntity shoppingNoteObj) {
+
+	public long addShoppingNote(ShoppingNoteEntity shoppingNoteObj) {
 
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
-
+		Entity entity;
 		try {
-			Entity entity = new Entity("Note");
+		    entity = new Entity("Note");
 
 			entity.setProperty("userID", shoppingNoteObj.getUserID());
 			entity.setProperty("creationDate", String.valueOf(shoppingNoteObj.getCreationDate()));
@@ -319,7 +340,6 @@ public class NoteModel {
 			entity.setProperty("noteType", shoppingNoteObj.getNoteType());
 			entity.setProperty("productCategory", shoppingNoteObj.getProductCategory());
 			entity.setProperty("productToBuy", shoppingNoteObj.getProductToBuy());
-			entity.setProperty("isActive", String.valueOf(true));
 
 			datastore.put(entity);
 			txn.commit();
@@ -328,15 +348,15 @@ public class NoteModel {
 				txn.rollback();
 			}
 		}
-		return true;
+		return entity.getKey().getId();
 	}
 
-	public boolean adddeadLineNote(DeadlineNoteEntity deadLineNoteObj) {
+	public long adddeadLineNote(DeadlineNoteEntity deadLineNoteObj) {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
-
+		Entity entity;
 		try {
-			Entity entity = new Entity("Note");
+			 entity = new Entity("Note");
 
 			entity.setProperty("userID", deadLineNoteObj.getUserID());
 			entity.setProperty("creationDate", String.valueOf(deadLineNoteObj.getCreationDate()));
@@ -347,7 +367,6 @@ public class NoteModel {
 			entity.setProperty("deadLineTitle", deadLineNoteObj.getDeadLineTitle());
 			entity.setProperty("deadLineDate", String.valueOf(deadLineNoteObj.getDeadLineDate()));
 
-			entity.setProperty("isActive", String.valueOf(true));
 			datastore.put(entity);
 			txn.commit();
 		} finally {
@@ -355,14 +374,16 @@ public class NoteModel {
 				txn.rollback();
 			}
 		}
-		return true;
+		return entity.getKey().getId();
 	}
 
-	public boolean addMeetingNote(MeetingNoteEntity meetingNoteObj) {
+	public long addMeetingNote(MeetingNoteEntity meetingNoteObj) {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
+		Entity entity;
+
 		try {
-			Entity entity = new Entity("Note");
+			 entity = new Entity("Note");
 
 			entity.setProperty("userID", meetingNoteObj.getUserID());
 			entity.setProperty("creationDate", String.valueOf(meetingNoteObj.getCreationDate()));
@@ -374,7 +395,6 @@ public class NoteModel {
 			entity.setProperty("meetingPlace", meetingNoteObj.getMeetingPlace());
 			entity.setProperty("estimatedTransportTime", String.valueOf(meetingNoteObj.getEstimatedTransportTime()));
 			entity.setProperty("meetingNoteDate", String.valueOf(meetingNoteObj.getmeetingNoteDate()));
-			entity.setProperty("isActive", String.valueOf(true));
 
 			datastore.put(entity);
 			txn.commit();
@@ -383,28 +403,27 @@ public class NoteModel {
 				txn.rollback();
 			}
 		}
-		return true;
+		return entity.getKey().getId();
 	}
-
 	
+	@SuppressWarnings("unchecked")
 	public JSONArray getAllNotes(String userID) {
 
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Vector<NoteEntity> allNotes = new Vector<NoteEntity>();
 		JSONArray returnedJson = new JSONArray();
-		Query gaeQuery = new Query("Note");
-		PreparedQuery pq = datastore.prepare(gaeQuery);
 		
 		Filter propertyFilter = new FilterPredicate("userID", FilterOperator.EQUAL, userID.trim());
-		Filter propertyFilter2 = new FilterPredicate("isDone", FilterOperator.EQUAL, "false");
-		Filter propertyFilter3 = new FilterPredicate("isActive", FilterOperator.EQUAL, "true");
-		Filter allConditions =
-				  CompositeFilterOperator.and(propertyFilter,propertyFilter2, propertyFilter3);
+		//Filter propertyFilter2 = new FilterPredicate("isDone", FilterOperator.EQUAL, "false");
+		//Filter propertyFilter3 = new FilterPredicate("isActive", FilterOperator.EQUAL, "true");
+	//	Filter allConditions =
+		//		  CompositeFilterOperator.and(propertyFilter,propertyFilter2, propertyFilter3);
 
 		
-		Query q = new Query("Note").setFilter(allConditions);
-		pq = datastore.prepare(q);
-		
+		Query q = new Query("Note").setFilter(propertyFilter);
+		PreparedQuery pq = datastore.prepare(q);
+		int resultSize = pq.countEntities(FetchOptions.Builder.withDefaults());
+		System.out.println("resultSize  = =====  "+resultSize);
 		
 		for (Entity entity : pq.asIterable()) {
 			entity.setProperty("isActive", "true");
@@ -478,6 +497,9 @@ public class NoteModel {
 			}
 		}
 		
+		for (int i = 0; i < allNotes.size(); i++) {
+			System.out.println(allNotes.get(i).toString());
+		}
 
 		return returnedJson;
 	}

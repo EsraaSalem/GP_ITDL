@@ -23,7 +23,7 @@ public class Store {
 	}
 	public void setStoreCategory(Vector<String> allstoreCategory) {
 		storeCategory  =new Vector<String>();
-		storeCategory.clear();
+		
 		for (int i = 0; i < allstoreCategory.size(); i++) {
 			storeCategory.add(allstoreCategory.get(i).trim().toLowerCase());
 		}
@@ -35,6 +35,7 @@ public class Store {
 	}
 	public boolean isCategoryFound(String c)
 	{
+		//System.out.println("HHHHHH   "+storeCategory.toString()+"   c  = "+c);
 		for (int i = 0; i < storeCategory.size(); i++) {
 			if(storeCategory.get(i).trim().toLowerCase().equals(c.toLowerCase().trim()))
 			{
@@ -62,12 +63,14 @@ public class Store {
 		this.address = address;
 		this.lat = lat;
 		this.lon = lon;
+		storeCategory  =new Vector<String>();
 	}
 	
 	public Store(String email, String password)
 	{
 		this.email = email;
 		this.password = password;
+		storeCategory  =new Vector<String>();
 	}
 
 	public String getName() {
@@ -116,5 +119,10 @@ public class Store {
 
 	public void setLon(double lon) {
 		this.lon = lon;
+	}
+	@Override
+	public String toString() {
+		return "Store [name=" + name + ", email=" + email + ", password=" + password + ", address=" + address + ", lat="
+				+ lat + ", lon=" + lon + ", storeCategory=" + storeCategory + "]";
 	}
 }

@@ -1,6 +1,9 @@
 package dataEntities;
 
+import java.sql.Time;
 import java.sql.Timestamp;
+
+import org.json.simple.JSONObject;
 
 public class DeadlineNoteEntity extends NoteEntity {
 
@@ -12,6 +15,43 @@ public class DeadlineNoteEntity extends NoteEntity {
 	public int getProgressPercentage() {
 		return progressPercentage;
 	}
+
+	
+
+	public void setProgressPercentage(int progressPercentage) {
+		this.progressPercentage = progressPercentage;
+	}
+
+	public String getDeadLineTitle() {
+		return deadLineTitle;
+	}
+
+	public void setDeadLineTitle(String deadLineTitle) {
+		this.deadLineTitle = deadLineTitle;
+	}
+
+	public Timestamp getDeadLineDate() {
+		return deadLineDate;
+	}
+
+	@Override
+	public String toString() {
+		return "DeadlineNoteEntity [progressPercentage=" + progressPercentage + ", deadLineTitle=" + deadLineTitle
+				+ ", deadLineDate=" + deadLineDate + ", servernoteID=" + servernoteID + ", userID=" + userID
+				+ ", creationDate=" + creationDate + ", isDone=" + isDone + ", isTextCategorized=" + isTextCategorized
+				+ ", noteType=" + noteType + "]";
+	}
+
+
+
+	public void setDeadLineDate(Timestamp deadLineDate) {
+		this.deadLineDate = deadLineDate;
+	}
+
+	public DeadlineNoteEntity() {
+		super();
+	}
+
 	public DeadlineNoteEntity(
 			 
 			int progressPercentage, 
@@ -30,37 +70,6 @@ public class DeadlineNoteEntity extends NoteEntity {
 		this.deadLineDate = deadLineDate;
 	}
 	
-	public void setProgressPercentage(int progressPercentage) {
-		this.progressPercentage = progressPercentage;
-	}
-
-	public String getDeadLineTitle() {
-		return deadLineTitle;
-	}
-
-	public void setDeadLineTitle(String deadLineTitle) {
-		this.deadLineTitle = deadLineTitle;
-	}
-
-	public Timestamp getDeadLineDate() {
-		return deadLineDate;
-	}
-
-	public void setDeadLineDate(Timestamp deadLineDate) {
-		this.deadLineDate = deadLineDate;
-	}
-
-	public DeadlineNoteEntity() {
-		super();
-	}
-
-	@Override
-	public String toString() {
-		return "DeadlineNoteEntity [progressPercentage=" + progressPercentage + ", deadLineTitle=" + deadLineTitle
-				+ ", deadLineDate=" + deadLineDate + ", noteID=" + noteID + ", userID=" + userID + ", creationDate="
-				+ creationDate + ", isDone=" + isDone + ", isActive=" + isActive + ", isTextCategorized="
-				+ isTextCategorized + ", noteType=" + noteType + "]";
-	}
 	
 
 }

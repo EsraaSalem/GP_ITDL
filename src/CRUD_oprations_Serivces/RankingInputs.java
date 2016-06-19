@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.google.appengine.labs.repackaged.org.json.JSONException;
@@ -23,6 +24,7 @@ import dataEntities.MeetingNoteEntity;
 import dataEntities.NoteEntity;
 import dataEntities.OrdinaryNoteEntity;
 import dataEntities.ShoppingNoteEntity;
+import dataEntities.UserInialWeights;
 import note_crud_operation_logic_classes.NoteCRUDOperations;
 
 @Path("/")
@@ -68,5 +70,48 @@ public class RankingInputs {
 		boolean result = rim.addUserInitialWeights(userID, userInitialWeightsSTR);
 		return "added";
 	}
+	
+	
+	public Vector<UserInialWeights> getParsedUserInitialWeights(String str) throws ParseException {
+		JSONParser parser = new JSONParser();
+		Vector<UserInialWeights> res = new Vector<UserInialWeights>();
+		System.out.println("AAAAAAA  " + str);
+		JSONArray jsonArray = (JSONArray) parser.parse(str.toString());
+
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject obj = new JSONObject();
+			obj = (JSONObject) jsonArray.get(i);
+			UserInialWeights uiw = new UserInialWeights();
+			uiw.setCategoryID(obj.get("categoryID").toString());
+			uiw.setCategoryName(obj.get("categoryName").toString());
+			uiw.setInialWeight(Double.parseDouble(obj.get("inialWeight").toString()));
+			uiw.setUserID(obj.get("userID").toString());
+			uiw.setCategoryRecordID(obj.get("categoryRecordID").toString());
+
+			res.add(uiw);
+		}
+
+		return res;
+	}
+	
+	
+	@POST
+	@Path("/updatePrefAfterConfirmationService")
+	public String updatePrefAfterConfirmation(@FormParam("userID") String userID,
+			@FormParam("userInitialWeightsSTR") String userInitialWeightsSTR ) throws ParseException, JSONException {
+		
+		Vector<UserInialWeights> parsedVec = getParsedUserInitialWeights(userInitialWeightsSTR);
+		RankingInputsModel rim = new RankingInputsModel();
+		rim.updateUserInterestAfterRunAlgo(parsedVec);
+		
+		JSONObject result = new JSONObject();
+		result.put("Status", "OK");
+		return result.toString();
+	}
+	
+	
+	
+	
+	
 
 }

@@ -69,7 +69,7 @@ public class NoteParser {
 		object.put("meetingNoteDate", String.valueOf(note.getmeetingNoteDate()));
 		object.put("meetingPlace", note.getMeetingPlace());
 		object.put("meetingTitle", note.getMeetingTitle());
-		object.put("noteID", note.getNoteID());
+		object.put("noteID", note.getServernoteID());
 		object.put("noteType", note.getNoteType());
 		object.put("userID", note.getUserID());
 		object.put("isDone", note.isDone());
@@ -83,7 +83,7 @@ public class NoteParser {
 		JSONObject object = new JSONObject();
 		object.put("noteContent", note.getNoteContent());
 		object.put("creationDate", String.valueOf(note.getCreationDate()));
-		object.put("noteID", note.getNoteID());
+		object.put("noteID", note.getServernoteID());
 		object.put("noteType", note.getNoteType());
 		object.put("userID", note.getUserID());
 		object.put("isDone", note.isDone());
@@ -100,7 +100,7 @@ public class NoteParser {
 		object.put("progressPercentage", String.valueOf(note.getProgressPercentage()));
 
 		object.put("creationDate", String.valueOf(note.getCreationDate()));
-		object.put("noteID", note.getNoteID());
+		object.put("noteID", note.getServernoteID());
 		object.put("noteType", note.getNoteType());
 		object.put("userID", note.getUserID());
 		object.put("isDone", String.valueOf(note.isDone()));
@@ -115,7 +115,7 @@ public class NoteParser {
 		object.put("productToBuy", note.getProductToBuy());
 		object.put("productCategory", note.getProductCategory());
 		object.put("creationDate", String.valueOf(note.getCreationDate()));
-		object.put("noteID", note.getNoteID());
+		object.put("noteID", note.getServernoteID());
 		object.put("noteType", note.getNoteType());
 		object.put("userID", note.getUserID());
 		object.put("isDone", note.isDone());

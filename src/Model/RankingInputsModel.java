@@ -30,11 +30,14 @@ import dataEntities.UserInialWeights;
 
 public class RankingInputsModel {
 
+	
+	
+	
 	public void updateUserInterestAfterRunAlgo(Vector<UserInialWeights> userInitialWeights) {
 
 		for(int i = 0 ; i < userInitialWeights.size() ; i++)
 		{
-			userInitialWeights.get(i).incrementTest();
+			//userInitialWeights.get(i).incrementTest();
 			updatePreference(userInitialWeights.get(i));
 		}
 	}
@@ -222,6 +225,7 @@ public class RankingInputsModel {
 		return true;
 	}
 
+	
 	@SuppressWarnings("unchecked")
 	public boolean addUserInitialWeights(String userID, String jsonArraySTR) throws ParseException, JSONException {
 		JSONParser parser = new JSONParser();
@@ -238,8 +242,8 @@ public class RankingInputsModel {
 
 			JSONObject o = (JSONObject) jsonArray.get(i);
 			String categoryName = o.get("categoryName").toString();
-			String definedCategory = tc.callTextCategoryAPI(categoryName);
-
+			String definedCategory = tc.callTextCategoryAPI(categoryName.toLowerCase().trim());
+			o.put("categoryName", definedCategory);
 			if (definedCategory.equals(artCategory)) {
 				double ratio = Double.parseDouble(o.get("initialWeight").toString());
 				sumArt += ratio;

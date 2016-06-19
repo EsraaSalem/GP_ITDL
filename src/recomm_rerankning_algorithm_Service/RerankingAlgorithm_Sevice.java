@@ -27,25 +27,40 @@ public class RerankingAlgorithm_Sevice {
 	@POST
 	@Path("/updateUserPreferenceService")
 	public String applyAlgorithmService(@FormParam("userID") String userID, @FormParam("twitterID") String twitterID) {
-		String result = "empty";
+		
+		JSONObject returnedJson = new JSONObject();
+		JSONArray result = new JSONArray();
+		//String result = "empty";
 		RerankingAlgorithmLogic obj = new RerankingAlgorithmLogic();
 		Vector<UserInialWeights> r = new Vector<UserInialWeights>();
 		try {
+			
 			r = obj.applyAlgorithmService(userID, twitterID);
 
 			if (r.size() > 0)
+			{
+				
 				result = convertUserUpdatedPreferencesToJsonArrSTTR(r);
+				returnedJson.put("result", result);
+				returnedJson.put("Status", "OK");
+				returnedJson.put("resultSize", result.size());
+				return returnedJson.toString();
+			}
+				
 
 		} catch (ParseException | JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return result;
+		returnedJson.put("result", result);
+		returnedJson.put("Status", "Failed");
+		returnedJson.put("resultSize", 0);
+		return returnedJson.toString();
 	}
 
 	@SuppressWarnings("unchecked")
-	public String convertUserUpdatedPreferencesToJsonArrSTTR(Vector<UserInialWeights> u) {
+	public  JSONArray convertUserUpdatedPreferencesToJsonArrSTTR(Vector<UserInialWeights> u) {
 
 		JSONArray jsonArr = new JSONArray();
 		for (int i = 0; i < u.size(); i++) {
@@ -59,7 +74,7 @@ public class RerankingAlgorithm_Sevice {
 			jsonArr.add(obj);
 		}
 
-		return jsonArr.toString();
+		return jsonArr;
 	}
 
 }

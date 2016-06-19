@@ -25,9 +25,12 @@ public class NLP_TextCategorization {
 			
 		} catch (XPathExpressionException | IOException | SAXException | ParserConfigurationException e) {
 			// TODO Auto-generated catch block
-			// return "";
+			// return "art and entertainment";
+			return "";
 		} catch (Exception ee) {
-			// return "";
+			
+			// return "art and entertainment";
+			return "";
 		}
 		return category;
 	}

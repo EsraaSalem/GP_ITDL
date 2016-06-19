@@ -52,8 +52,8 @@ public class AlchemyAPI {
 		//
 		// BufferedReader breader = new BufferedReader(new
 		// InputStreamReader(fis));
-
-		_apiKey = "0cf65b78b415af649dbedc94df79d0e9e2dfebdd";
+//Yasmin key:7b18e56cf9fa7a645b58772b3417c73a15c511ba
+		_apiKey = "7b18e56cf9fa7a645b58772b3417c73a15c511ba";//ESRAA key:"0cf65b78b415af649dbedc94df79d0e9e2dfebdd";
 		// _apiKey=breader.readLine().replaceAll("\\n", "").replaceAll("\\r",
 		// "");
 

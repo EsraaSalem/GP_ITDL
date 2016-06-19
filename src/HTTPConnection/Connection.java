@@ -16,8 +16,7 @@ public class Connection {
 		//System.out.println(serviceUrl);
 		try {
 			URL url = new URL(serviceUrl);
-			HttpURLConnection connection = (HttpURLConnection) url
-					.openConnection();
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
 			connection.setInstanceFollowRedirects(false);

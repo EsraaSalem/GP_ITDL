@@ -88,8 +88,8 @@ public class RerankingAlgorithmLogic {
 			
 				AnalyticalHierarchicalProcess a = new AnalyticalHierarchicalProcess();
 				finalResult = a.run(userInitialWeights, sourcesSignificance, allCategories, userID);
-				rankModel.updateUserInterestAfterRunAlgo(finalResult);
-				System.out.println("NO UPDATE");
+				//rankModel.updateUserInterestAfterRunAlgo(finalResult);
+				//System.out.println("NO UPDATE");
 			}
 				
 			lastDate.addLastUpdatePreferencesDate(userID);

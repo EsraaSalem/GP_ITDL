@@ -40,6 +40,9 @@ public class OfferRecommender {
 					String storeLat = jstore.get("latitude").toString();
 					String storeLong = jstore.get("longitude").toString();
 					String jsonStoreEmail = jstore.get("storeEmail").toString();
+					String storeAddress = jstore.get("storeAddress").toString();
+					String storeName = jstore.get("storeName").toString();
+
 					JSONArray joffers = (JSONArray) parser.parse(jstore.get("offers").toString());
 					for (int j = 0; j < joffers.size(); j++) {
 						JSONObject joffer;
@@ -49,7 +52,9 @@ public class OfferRecommender {
 						o.setStoreLat(Double.parseDouble(storeLat));
 						o.setStoreLong(Double.parseDouble(storeLong));
 						o.setJsonStoreEmail(jsonStoreEmail);
-
+						o.setStoreAddress(storeAddress);
+						o.setStoreName(storeName);
+						
 						storeOffers.add(o);
 					}
 					// output += storeLat + " " + storeLong + " " +
@@ -95,8 +100,11 @@ public class OfferRecommender {
 	}
 
 	public Store convertJsonObjToStoreObj(JSONObject jsonObj) {
-		return new Store(jsonObj.get("name").toString(), jsonObj.get("email").toString(),
-				jsonObj.get("password").toString(), jsonObj.get("address").toString(),
+		return new Store(
+				jsonObj.get("name").toString(), 
+				jsonObj.get("email").toString(),
+				jsonObj.get("password").toString(), 
+				jsonObj.get("address").toString(),
 				Double.parseDouble(jsonObj.get("latitude").toString()),
 				Double.parseDouble(jsonObj.get("longitude").toString()));
 	}
@@ -122,6 +130,10 @@ public class OfferRecommender {
 					String storeLat = jstore.get("latitude").toString();
 					String storeLong = jstore.get("longitude").toString();
 					String jsonStoreEmail = jstore.get("storeEmail").toString();
+					String storeAddress = jstore.get("storeAddress").toString();
+					String storeName = jstore.get("storeName").toString();
+
+					
 					JSONArray joffers = (JSONArray) parser.parse(jstore.get("offers").toString());
 					for (int j = 0; j < joffers.size(); j++) {
 						JSONObject joffer;
@@ -131,7 +143,8 @@ public class OfferRecommender {
 						o.setStoreLat(Double.parseDouble(storeLat));
 						o.setStoreLong(Double.parseDouble(storeLong));
 						o.setJsonStoreEmail(jsonStoreEmail);
-
+						o.setStoreAddress(storeAddress);
+						o.setStoreName(storeName);
 						storeOffers.add(o);
 					}
 					// output += storeLat + " " + storeLong + " " +
@@ -150,6 +163,7 @@ public class OfferRecommender {
 		TextCategorization txtCat = new TextCategorization();
 		String offerCat = jsonObj.get("CategoryName").toString();
 		offerCat = txtCat.callTextCategoryAPI(offerCat);
+	//	System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMM   "+offerCat +"   offers ID:  "+jsonObj.get("OfferID").toString());
 		return new Offer(jsonObj.get("StoreID").toString(), jsonObj.get("OfferID").toString(),
 				offerCat, jsonObj.get("Content").toString(),
 				jsonObj.get("StartDate").toString(), jsonObj.get("EndDate").toString());
