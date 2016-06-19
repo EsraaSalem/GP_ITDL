@@ -3,7 +3,7 @@ package dataEntities;
 import java.util.Vector;
 
 public class Store {
-	
+
 	private String name;
 	private String email;
 	private String password;
@@ -12,65 +12,74 @@ public class Store {
 	private double lon;
 	
 	
+
 	private Vector<String> storeCategory;
-	public Store()
-	{
-		storeCategory  =new Vector<String>();
-		
+
+	public Store() {
+		storeCategory = new Vector<String>();
+
 	}
+
 	public Vector<String> getStoreCategory() {
 		return storeCategory;
 	}
+
 	public void setStoreCategory(Vector<String> allstoreCategory) {
-		storeCategory  =new Vector<String>();
-		
+		storeCategory = new Vector<String>();
+
 		for (int i = 0; i < allstoreCategory.size(); i++) {
-			storeCategory.add(allstoreCategory.get(i).trim().toLowerCase());
+			System.out.println(allstoreCategory.get(i).trim().toLowerCase());
+			if (allstoreCategory.get(i).trim().toLowerCase().equals("")
+					|| allstoreCategory.get(i).trim().toLowerCase().equals("nocategory")) {
+			} else
+				storeCategory.add(allstoreCategory.get(i).trim().toLowerCase());
 		}
-		
+		System.out.println("LLLL  =  " + storeCategory.size());
+
 	}
-	public void addcategoryToStore(String c)
-	{
+
+	public void addcategoryToStore(String c) {
 		storeCategory.add(c);
 	}
-	public boolean isCategoryFound(String c)
-	{
-		//System.out.println("HHHHHH   "+storeCategory.toString()+"   c  = "+c);
+
+	public boolean isCategoryFound(String c) {
+		// System.out.println("HHHHHH "+storeCategory.toString()+" c = "+c);
 		for (int i = 0; i < storeCategory.size(); i++) {
-			if(storeCategory.get(i).trim().toLowerCase().equals(c.toLowerCase().trim()))
-			{
+			if (storeCategory.get(i).trim().toLowerCase().equals(c.toLowerCase().trim())) {
 				return true;
 			}
 		}
 		return false;
 	}
-	public Vector<String> getStoreAllCategories()
-	{
+
+	public int getStoreVecSize() {
+		return storeCategory.size();
+	}
+
+	public Vector<String> getStoreAllCategories() {
 		return storeCategory;
 	}
-	public void printStoreAllCategories()
-	{
+
+	public void printStoreAllCategories() {
 		for (int i = 0; i < storeCategory.size(); i++) {
 			System.out.println(storeCategory.get(i));
 		}
 	}
-	
-	public Store(String name, String email, String password, String address, double lat, double lon)
-	{
+
+	public Store(String name, String email, String password, String address, double lat, double lon) {
 		this.email = email;
 		this.name = name;
 		this.password = password;
 		this.address = address;
 		this.lat = lat;
 		this.lon = lon;
-		storeCategory  =new Vector<String>();
+		storeCategory = new Vector<String>();
 	}
-	
-	public Store(String email, String password)
-	{
+
+	public Store(String email, String password) {
 		this.email = email;
 		this.password = password;
-		storeCategory  =new Vector<String>();
+		storeCategory = new Vector<String>();
 	}
 
 	public String getName() {
@@ -120,9 +129,16 @@ public class Store {
 	public void setLon(double lon) {
 		this.lon = lon;
 	}
+
 	@Override
 	public String toString() {
-		return "Store [name=" + name + ", email=" + email + ", password=" + password + ", address=" + address + ", lat="
-				+ lat + ", lon=" + lon + ", storeCategory=" + storeCategory + "]";
+		String str = "StoreEmail = " + email + "\nStoreCategory = " + storeCategory.toString() + "\nstoreSize = "
+				+ getStoreVecSize();
+
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		return str;
+		// return "Store [name=" + name + ", email=" + email + ", password=" +
+		// password + ", address=" + address + ", lat="
+		// + lat + ", lon=" + lon + ", storeCategory=" + storeCategory + "]";
 	}
 }

@@ -23,6 +23,9 @@ import org.xml.sax.SAXException;
 
 public class AlchemyAPI {
 
+	public final String API_KEY = "7b18e56cf9fa7a645b58772b3417c73a15c511ba";//Yasmin
+	//public final String API_KEY = "0cf65b78b415af649dbedc94df79d0e9e2dfebdd";//ESRAA
+	
 	private String _apiKey;
 	private String _requestUri = "http://access.alchemyapi.com/calls/";
 
@@ -53,7 +56,7 @@ public class AlchemyAPI {
 		// BufferedReader breader = new BufferedReader(new
 		// InputStreamReader(fis));
 //Yasmin key:7b18e56cf9fa7a645b58772b3417c73a15c511ba
-		_apiKey = "7b18e56cf9fa7a645b58772b3417c73a15c511ba";//ESRAA key:"0cf65b78b415af649dbedc94df79d0e9e2dfebdd";
+		_apiKey = API_KEY;//ESRAA key:"0cf65b78b415af649dbedc94df79d0e9e2dfebdd";
 		// _apiKey=breader.readLine().replaceAll("\\n", "").replaceAll("\\r",
 		// "");
 
@@ -754,7 +757,7 @@ public class AlchemyAPI {
 
 	public Document ImageGetRankedImageKeywords(AlchemyAPI_ImageParams params)
 			throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
-		URL url = new URL(_requestUri + "image/ImageGetRankedImageKeywords?" + "apikey=" + "0cf65b78b415af649dbedc94df79d0e9e2dfebdd"
+		URL url = new URL(_requestUri + "image/ImageGetRankedImageKeywords?" + "apikey=" + API_KEY
 				+ params.getParameterString());
 		System.out.println(url.toString());
 
@@ -793,7 +796,7 @@ public class AlchemyAPI {
 			throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
 		StringBuilder uri = new StringBuilder();
 		uri.append(_requestUri).append(callPrefix).append('/').append(callName).append('?').append("apikey=")
-				.append("0cf65b78b415af649dbedc94df79d0e9e2dfebdd");
+				.append(API_KEY);
 		uri.append(params.getParameterString());
 
 		URL url = new URL(uri.toString());
@@ -812,7 +815,7 @@ public class AlchemyAPI {
 
 		StringBuilder data = new StringBuilder();
 
-		data.append("apikey=").append("0cf65b78b415af649dbedc94df79d0e9e2dfebdd");
+		data.append("apikey=").append(API_KEY);
 		data.append(params.getParameterString());
 
 		handle.addRequestProperty("Content-Length", Integer.toString(data.length()));

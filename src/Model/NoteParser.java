@@ -38,6 +38,7 @@ public class NoteParser {
 
 	public ShoppingNoteEntity convertJsonObjToShoppingNoteObj(JSONObject jsonObj) {
 
+		
 		return new ShoppingNoteEntity(String.valueOf(jsonObj.get("noteID")), jsonObj.get("userID").toString(),
 				java.sql.Timestamp.valueOf(jsonObj.get("creationDate").toString()),
 				Boolean.valueOf(jsonObj.get("isDone").toString()),

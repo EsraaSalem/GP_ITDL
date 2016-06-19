@@ -656,7 +656,7 @@ return note;
 		resultObj.put("Status", "OK");
 		resultObj.put("resultSize", allNotes.size());
 		resultObj.put("AllUserNotes", allNotes);
-		
+		resultObj.put("userID",userID);
 		return resultObj.toString();
 	}
 	

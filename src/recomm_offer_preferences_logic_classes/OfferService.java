@@ -31,6 +31,219 @@ import recomm_reranking_algorithm_logic_classes.RerankingAlgorithmLogic;
 @Produces(MediaType.TEXT_PLAIN)
 public class OfferService {
 
+	public Vector<String> getStoreCategories(Vector<Offer> offers, String storeEmail) {
+		Vector<String> storeCategories = new Vector<String>();
+		for (int i = 0; i < offers.size(); i++) {
+
+			if (offers.get(i).getStoreID().trim().toLowerCase().equals(storeEmail.toLowerCase().trim())) {
+				// Here you may need the categorization API to double check on
+				// the category type
+				storeCategories.add(offers.get(i).getCategory().trim().toLowerCase());
+
+			}
+		}
+		return storeCategories;
+	}
+
+	@POST
+	@Path("/getNearestStoresToUserService")
+	public String getNearestStoresToUserService(@FormParam("userID") String userID)
+			throws ParseException, JSONException {
+		JSONObject jsonObj = new JSONObject();
+		JSONArray resultNearestStores = new JSONArray();
+		NoteCRUDOperations notefetch = new NoteCRUDOperations();
+		Vector<NoteEntity> shoppingNotesOnly = new Vector<NoteEntity>();
+		shoppingNotesOnly = notefetch.getShoppingNotesONLY(userID);
+
+		System.out.println("***********************************************");
+		System.out.println("*******SHOPPING NOTES ONLY*******************");
+		System.out.println("***********************************************");
+		TextCategorization textCat = new TextCategorization();
+
+		for (int i = 0; i < shoppingNotesOnly.size(); i++) {
+			String productCategory = ((ShoppingNoteEntity) shoppingNotesOnly.get(i)).getProductCategory();
+			System.out.println("JJJJJJJJJJJJJJJ   " + productCategory);
+			productCategory = textCat.callTextCategoryAPI(productCategory);
+			((ShoppingNoteEntity) shoppingNotesOnly.get(i)).setProductCategory(productCategory);
+
+			System.out.println(shoppingNotesOnly.get(i).toString());
+		}
+
+		if (shoppingNotesOnly.size() > 0) {
+
+			OfferRecommender offerRecommendaer = new OfferRecommender();
+
+			Vector<Store> allstores = new Vector<Store>();
+			allstores = offerRecommendaer.callGetStoreWebService();
+			System.out
+					.println("----------------------------ALL Store ------------------------------" + allstores.size());
+			for (int i = 0; i < allstores.size(); i++) {
+				System.out.println(allstores.get(i).toString());
+			}
+			Vector<Offer> offers = new Vector<Offer>();
+			offers = offerRecommendaer.callGetAllOffersWebService();
+			System.out.println("----------------------------All Offers------------------------------" + offers.size());
+			for (int i = 0; i < offers.size(); i++) {
+				System.out.println(offers.get(i).toString());
+			}
+
+			System.out.println("Sizeeeeeeeeee " + allstores.size());
+
+			for (int i = 0; i < allstores.size(); i++) {
+				Vector<String> storeCategories = new Vector<String>();
+				for (int j = 0; j < offers.size(); j++) {
+
+					String storeEmail = allstores.get(i).getEmail();
+					String offerStoreID = offers.get(j).getStoreID();
+					// System.out.println("############ "+storeEmail+ "
+					// "+offerStoreID);
+					if (storeEmail.equals(offerStoreID)) {
+
+						if (offers.get(j).getCategory().toLowerCase().trim().equals("")
+								|| offers.get(j).getCategory().toLowerCase().trim().equals("nocategory")) {
+
+						} else
+
+						{
+							storeCategories.add(offers.get(j).getCategory());
+						}
+
+					}
+				}
+				allstores.get(i).setStoreCategory(storeCategories);
+
+				// storeCategories = getStoreCategories(offers,
+				// allstores.get(i).getEmail().trim().toLowerCase());
+				// System.out.println("########### " +
+				// storeCategories.toString());
+				// allstores.get(i).setStoreCategory(storeCategories);
+			}
+			System.out.println(
+					"#####################-ALL Store WITH categories------------------------------" + allstores.size());
+			for (int i = 0; i < allstores.size(); i++) {
+
+				System.out.println("Nour Size = " + allstores.get(i).getStoreVecSize());
+
+				if (allstores.get(i).getStoreVecSize() == 0) {
+					allstores.remove(i);
+				}
+				// System.out.println(allstores.get(i).toString());
+			}
+			System.out.println(
+					"&&&&&&&&&&&&&&&&&&&&&&&ALL Store AFTER removal------------------------------" + allstores.size());
+			for (int i = 0; i < allstores.size(); i++) {
+
+				System.out.println(allstores.get(i).toString());
+			}
+
+			for (int i = 0; i < allstores.size(); i++) {
+
+				System.out.println("Esraa Size = " + allstores.get(i).getStoreVecSize());
+				if (allstores.get(i).getStoreVecSize() == 0) {
+					allstores.remove(i);
+				}
+				// System.out.println(allstores.get(i).toString());
+			}
+///you are here
+			System.out.println("NNNNNNNNNNNN   " + allstores.size());
+
+			for (int i = 0; i < allstores.size(); i++) {
+
+				System.out.println(allstores.get(i).toString());
+			}
+			Vector<NearestStore> nearestStore = new Vector<NearestStore>();
+			for (int i = 0; i < allstores.size(); i++) {
+				Vector<String> notes = new Vector<String>();
+				for (int k = 0; k < shoppingNotesOnly.size(); k++) {
+					ShoppingNoteEntity sh = (ShoppingNoteEntity) shoppingNotesOnly.get(k);
+					if (allstores.get(i).isCategoryFound(sh.getProductCategory().trim().toLowerCase())) {
+					notes.add(sh.getProductToBuy().trim().toLowerCase());
+					
+					}
+					
+				}
+				if(notes.size()>0)
+				{
+					NearestStore ns = new NearestStore();
+					ns.setStoreName(allstores.get(i).getName());
+					ns.setLat(allstores.get(i).getLat());
+					ns.setLongt(allstores.get(i).getLon());
+					ns.setListOfUserShoppingNotes(notes);
+					ns.setStoreAddress(allstores.get(i).getAddress());
+					ns.setStoreEmail(allstores.get(i).getEmail());
+					ns.setStoreCategories(allstores.get(i).getStoreAllCategories());
+					//ns.setUserProductToBuy(sh.getProductToBuy());
+					//ns.setCategory(sh.getProductCategory());
+
+					// System.out.println("---------------------- " +
+					// ns.toString());
+					nearestStore.add(ns);
+				}
+			}
+			
+		
+
+			if (nearestStore.size() > 0) {
+				resultNearestStores = convertVectorNearestStoresToJsonArrSTR(nearestStore);
+
+				jsonObj.put("Status", "OK");
+				jsonObj.put("result", resultNearestStores);
+				jsonObj.put("resultSize", resultNearestStores.size());
+			} else {
+				JSONArray tempArr = new JSONArray();
+				jsonObj.put("Status", "Failed");
+				jsonObj.put("result", tempArr);
+				jsonObj.put("resultSize", 0);
+			}
+		} else {
+			JSONArray tempArr = new JSONArray();
+			jsonObj.put("Status", "Failed");
+			jsonObj.put("result", tempArr);
+			jsonObj.put("resultSize", 0);
+		}
+
+		return jsonObj.toString();
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public JSONArray convertVectorNearestStoresToJsonArrSTR(Vector<NearestStore> nearestStores) {
+
+		JSONArray jsonarray = new JSONArray();
+
+		for (int i = 0; i < nearestStores.size(); i++) {
+			JSONObject obj = new JSONObject();
+			NearestStore n = new NearestStore();
+			n = nearestStores.get(i);
+			obj.put("storeName", n.getStoreName());
+			obj.put("storeAddress",n.getStoreAddress());
+			//obj.put("userProductToBuy", n.getUserProductToBuy());
+			obj.put("lat", n.getLat());
+			obj.put("longt", n.getLongt());
+			//obj.put("category", n.getCategory());
+
+			JSONArray noteList = new JSONArray();
+			Vector<String> userShoppingNotes = new Vector<String>();
+			userShoppingNotes = n.getListOfUserShoppingsNote();
+			for (int j = 0; j < userShoppingNotes.size(); j++) {
+				noteList.add(userShoppingNotes.get(j));
+			}
+			
+			JSONArray listOfcat = new JSONArray();
+			Vector<String> listOfCatVec = new Vector<String>();
+			listOfCatVec = n.getStoreCategories();
+			for (int j = 0; j < listOfCatVec.size(); j++) {
+				listOfcat.add(listOfCatVec.get(j));
+			}
+			obj.put("listOfStoreCategories", listOfcat);
+
+			obj.put("listOfShoppingNote", noteList);
+			obj.put("storeEmail", n.getStoreEmail());
+			jsonarray.add(obj);
+		}
+		return jsonarray;
+	}
+
 	@POST
 	@Path("/getTop3Preferences")
 	public String getTop3Preferences(@FormParam("userID") String userID) throws JSONException, ParseException {
@@ -192,170 +405,10 @@ public class OfferService {
 			obj.put("storeLat", o.getStoreLat());
 			obj.put("storeLong", o.getStoreLong());
 			obj.put("jsonStoreEmail", o.getJsonStoreEmail());
-			
+
 			obj.put("storeAddress", o.getStoreAddress());
-			
+
 			obj.put("storeName", o.getStoreName());
-			
-			
-			jsonarray.add(obj);
-
-		}
-		return jsonarray;
-	}
-
-	public Vector<String> getStoreCategories(Vector<Offer> offers, String storeEmail) {
-		Vector<String> storeCategories = new Vector<String>();
-		for (int i = 0; i < offers.size(); i++) {
-
-			if (offers.get(i).getStoreID().trim().toLowerCase().equals(storeEmail.toLowerCase().trim())) {
-				// Here you may need the categorization API to double check on
-				// the category type
-				storeCategories.add(offers.get(i).getCategory().trim().toLowerCase());
-
-			}
-		}
-		return storeCategories;
-	}
-
-	@POST
-	@Path("/getNearestStoresToUserService")
-	public String getNearestStoresToUserService(@FormParam("userID") String userID)
-			throws ParseException, JSONException {
-		JSONObject jsonObj = new JSONObject();
-		JSONArray resultNearestStores = new JSONArray();
-		NoteCRUDOperations notefetch = new NoteCRUDOperations();
-		Vector<NoteEntity> shoppingNotesOnly = new Vector<NoteEntity>();
-		shoppingNotesOnly = notefetch.getShoppingNotesONLY(userID);
-		
-		System.out.println("***********************************************");
-		System.out.println("***********************************************");
-		System.out.println("***********************************************");
-		for (int i = 0; i < shoppingNotesOnly.size(); i++) {
-			System.out.println(shoppingNotesOnly.get(i).toString());
-		}
-		if (shoppingNotesOnly.size() > 0) {
-		
-			OfferRecommender offerRecommendaer = new OfferRecommender();
-
-			Vector<Store> allstores = new Vector<Store>();
-			allstores = offerRecommendaer.callGetStoreWebService();
-			System.out.println("----------------------------ALL Store ------------------------------");
-			for (int i = 0; i < allstores.size(); i++) {
-				System.out.println(allstores.get(i).toString());
-			}
-			Vector<Offer> offers = new Vector<Offer>();
-			offers = offerRecommendaer.callGetAllOffersWebService();
-			// System.out.println("----------------------------All Offers
-			// ------------------------------");
-			// for (int i = 0; i < offers.size(); i++) {
-			// System.out.println(offers.get(i).toString());
-			// }
-
-			// System.out.println("Sizeeeeeeeeee " + allstores.size());
-			for (int i = 0; i < allstores.size(); i++) {
-				Vector<String> storeCategories = new Vector<String>();
-				for (int j = 0; j < offers.size(); j++) {
-
-					String storeEmail = allstores.get(i).getEmail();
-					String offerStoreID = offers.get(j).getStoreID();
-					// System.out.println("############ "+storeEmail+ "
-					// "+offerStoreID);
-					if (storeEmail.equals(offerStoreID)) {
-						storeCategories.add(offers.get(j).getCategory());
-						allstores.get(i).addcategoryToStore(offers.get(j).getCategory());
-					}
-				}
-				// storeCategories = getStoreCategories(offers,
-				// allstores.get(i).getEmail().trim().toLowerCase());
-				// System.out.println("########### " +
-				// storeCategories.toString());
-				// allstores.get(i).setStoreCategory(storeCategories);
-			}
-
-			Vector<NearestStore> nearestStore = new Vector<NearestStore>();
-			for (int i = 0; i < shoppingNotesOnly.size(); i++) {
-				ShoppingNoteEntity sh = (ShoppingNoteEntity) shoppingNotesOnly.get(i);
-				for (int j = 0; j < allstores.size(); j++) {
-					if (allstores.get(j).isCategoryFound(sh.getProductCategory().trim().toLowerCase())) {
-
-						boolean isAddedPrev = false;
-						Store s = new Store();
-						s = allstores.get(j);
-
-						// for (int k = 0; k < nearestStore.size(); k++) {
-						// NearestStore n = new NearestStore();
-						// n = nearestStore.get(k);
-						//
-						// System.out.println(s.toString());
-						// System.out.println(n.toString());
-						// System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-						// if(s.getLat()==n.getLat() && s.getLon() ==
-						// n.getLongt())
-						// {
-						// System.out.println("EQUALS size =
-						// "+nearestStore.size() );
-						// }
-						//
-						//
-						// }
-						if (!isAddedPrev) {
-							System.out.println("SIZE = " + nearestStore.size());
-							NearestStore ns = new NearestStore();
-							ns.setStoreName(allstores.get(i).getName());
-							ns.setLat(allstores.get(i).getLat());
-							ns.setLongt(allstores.get(i).getLon());
-							ns.setUserProductToBuy(sh.getProductToBuy());
-							ns.setCategory(sh.getProductCategory());
-
-							// System.out.println("---------------------- " +
-							// ns.toString());
-							nearestStore.add(ns);
-							break;
-						}
-					}
-				}
-			}
-
-			if (nearestStore.size() > 0) {
-				resultNearestStores = convertVectorNearestStoresToJsonArrSTR(nearestStore);
-
-				jsonObj.put("Status", "OK");
-				jsonObj.put("result", resultNearestStores);
-				jsonObj.put("resultSize", resultNearestStores.size());
-			} else {
-				JSONArray tempArr = new JSONArray();
-				jsonObj.put("Status", "Failed");
-				jsonObj.put("result", tempArr);
-				jsonObj.put("resultSize", 0);
-			}
-		} else {
-			JSONArray tempArr = new JSONArray();
-			jsonObj.put("Status", "Failed");
-			jsonObj.put("result", tempArr);
-			jsonObj.put("resultSize", 0);
-		}
-		// System.out.println("************************************* " +
-		// resultNearestStores);
-
-		return jsonObj.toString();
-
-	}
-
-	@SuppressWarnings("unchecked")
-	public JSONArray convertVectorNearestStoresToJsonArrSTR(Vector<NearestStore> nearestStores) {
-
-		JSONArray jsonarray = new JSONArray();
-
-		for (int i = 0; i < nearestStores.size(); i++) {
-			JSONObject obj = new JSONObject();
-			NearestStore n = new NearestStore();
-			n = nearestStores.get(i);
-			obj.put("storeName", n.getStoreName());
-			obj.put("userProductToBuy", n.getUserProductToBuy());
-			obj.put("lat", n.getLat());
-			obj.put("longt", n.getLongt());
-			obj.put("category", n.getCategory());
 
 			jsonarray.add(obj);
 

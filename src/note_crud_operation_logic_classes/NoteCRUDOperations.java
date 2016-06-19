@@ -94,7 +94,7 @@ public class NoteCRUDOperations {
 			} 
 		}
 
-		System.out.println("SHOPPING NOTES ONLY "+notes.toString());
+		System.out.println("SHOPPING NOTES ONLY "+notes.size());
 		
 		return notes;
 	}

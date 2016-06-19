@@ -16,6 +16,7 @@ public class TextCategorization {
 
 		String serviceUrl = "https://uclassify.com/browse/uclassify/topics/ClassifyText";
 		String param = "readkey=C14x5zvtGQoL&output=json&version=1.01&text=" + sentence.trim();
+		
 		String retJson = Connection.connect(serviceUrl, param, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
 
@@ -57,17 +58,26 @@ public class TextCategorization {
 	}
 
 	public String callTextCategoryAPI(String textinput) throws JSONException, ParseException {
-
+		if (textinput == null) {
+			textinput = "";
+			return textinput;
+			
+		}
+		
 		String sentenceClass = classifyByAlchemy(textinput);
+		if (sentenceClass == null) {
+			sentenceClass = "";
+			return sentenceClass;
+			
+		}
 		
 	//	System.out.println("sentenceClass  = "+sentenceClass);
 		if (sentenceClass.equals("") || sentenceClass.equals("NoCategory")) {
-			sentenceClass = classifyByUclassify(textinput);
+			//remove this comment tomorrow
+			//sentenceClass = classifyByUclassify(textinput);
 			sentenceClass = classifyByAlchemy(sentenceClass);
 		}
-		if (sentenceClass == null) {
-			sentenceClass = "";
-		}
+		
 		//System.out.println("sentenceClass  = "+sentenceClass);
 
 		return sentenceClass;

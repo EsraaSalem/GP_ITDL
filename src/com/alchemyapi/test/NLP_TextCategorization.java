@@ -15,6 +15,7 @@ public class NLP_TextCategorization {
 		try {
 			String res = taxonomy.getTextCategory(text);
 
+			
 			if (res.equals("")) {
 				category = "NoCategory";
 			} else {
@@ -26,8 +27,12 @@ public class NLP_TextCategorization {
 		} catch (XPathExpressionException | IOException | SAXException | ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			// return "art and entertainment";
+			System.out.println("IOException");
+			
+			
 			return "";
 		} catch (Exception ee) {
+			System.out.println("IOException");
 			
 			// return "art and entertainment";
 			return "";

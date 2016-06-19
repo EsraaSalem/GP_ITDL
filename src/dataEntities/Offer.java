@@ -13,8 +13,6 @@ public class Offer  {
 	private double storeLat;
 	private double storeLong;
 	private String jsonStoreEmail;
-	
-	
 	private String storeName;
 	private String storeAddress;
 	
@@ -159,9 +157,7 @@ public class Offer  {
 
 	@Override
 	public String toString() {
-		return "Offer [offerID=" + offerID + ", category=" + category + ", content=" + content + ", startDate="
-				+ startDate + ", endDate=" + endDate + ", storeID=" + storeID + ", storeLat=" + storeLat
-				+ ", storeLong=" + storeLong + ", jsonStoreEmail=" + jsonStoreEmail + "]";
+		return "Offer [category=" + category + ", storeID=" + storeID ;
 	}
 
 	
