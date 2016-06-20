@@ -27,13 +27,13 @@ public class NLP_TextCategorization {
 		} catch (XPathExpressionException | IOException | SAXException | ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			// return "art and entertainment";
-			System.out.println("IOException");
-			
+			//System.out.println("IOException");
+			//e.printStackTrace();
 			
 			return "";
 		} catch (Exception ee) {
 			System.out.println("IOException");
-			
+		//	ee.printStackTrace();
 			// return "art and entertainment";
 			return "";
 		}

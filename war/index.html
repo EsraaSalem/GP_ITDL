@@ -11,77 +11,16 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Test web services</title>
 </head>
-<h1>**********************************************************************</h1>
-<h1>*********************ADD notes**************************</h1>
-<h1>**********************************************************************</h1>
-	Add Ordinary Note
-	<form action="textcat/addOrdinaryNote" method="post">
-		Ordinary note: <input type="text" name="ordinaryNoteContent">
-		<br>userID<input type="text" name="userID"> <input
-			type="submit" value="Add ordinary note">
-	</form>
-
-
-
-	Add Meeting Note
-	<form action="textcat/addMeetingNote" method="post">
-		userID<input type="text" name="userID"><br>
-		estimatedTransportTime<input type="text" name="estimatedTransportTime"><br>
-		meetingNoteDate<input type="text" name="meetingNoteDate"><br>
-		meetingPlace<input type="text" name="meetingPlace"><br>
-		meetingAgenda<input type="text" name="meetingAgenda"><br>
-		meetingTitle<input type="text" name="meetingTitle"><br> <input
-			type="submit" value="Add Meeting note">
-	</form>
-
-	Add Deadline note
-	<form action="textcat/addDeadLineNote" method="post">
-
-		progressPercentage<input type="text" name="progressPercentage"><br>
-		deadLineTitle<input type="text" name="deadLineTitle"><br>
-		deadLineDate<input type="text" name="deadLineDate"><br>
-		userID<input type="text" name="userID"><br> <input
-			type="submit" value="Add Deadline note">
-	</form>
-	Add Shopping Note
-
-	<form action="textcat/addShoppingNote" method="post">
-
-		productToBuy<input type="text" name="productToBuy"><br>
-		productCategory<input type="text" name="productCategory"><br>
-		userID<input type="text" name="userID"><br> <input
-			type="submit" value="Add Shopping note">
-	</form>
-<h1>**********************************************************************</h1>
-<h1>******************GET ALl notes***************************</h1>
-<h1>**********************************************************************</h1>
-<h1>**********************************************************************</h1>
-
-<form action="textcat/getAllNotesService" method="post">
-
-	<input type="text" name="userID"> <input type="submit"
-		value="get all notes">
-</form>
-<h1>**********************************************************************</h1>
-<h1>**********************************************************************</h1>
-
-
-
-
-
+<h1>Nearest stores</h1>
 <form action="textcat/getNearestStoresToUser" method="post">
 	userID<input type="text" name="userID"> <input type="submit"
 		value="getNearestStoresToUser">
 </form>
-<form action="textcat/getOffers" method="post">
-	userID<input type="text" name="userID"> <input type="submit"
-		value="get offer">
-</form>
+<H1>Text categorization</H1>
 
-
-<form action="textcat/categorize" method="post">
-	userID<input type="text" name="str"> <input type="submit"
-		value="get offer">
+<form action="textcat/cat" method="post">
+	userID<input type="text" name="word"> <input type="submit"
+		value="Categorization">
 </form>
 
 
