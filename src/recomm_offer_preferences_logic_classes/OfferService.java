@@ -31,6 +31,14 @@ import recomm_reranking_algorithm_logic_classes.RerankingAlgorithmLogic;
 @Produces(MediaType.TEXT_PLAIN)
 public class OfferService {
 
+	@POST
+	@Path("updateLikedOffersService")
+	public String updateLikedOffersService(@FormParam("likedOffers") String likedOffers)
+	{
+		JSONObject jsonObj = new JSONObject();
+		return "";
+	}
+	
 	public Vector<String> getStoreCategories(Vector<Offer> offers, String storeEmail) {
 		Vector<String> storeCategories = new Vector<String>();
 		for (int i = 0; i < offers.size(); i++) {

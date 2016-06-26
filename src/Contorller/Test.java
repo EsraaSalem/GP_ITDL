@@ -34,6 +34,117 @@ import recomm_reranking_algorithm_logic_classes.UpdatePreferenceLastDate;;
 @Produces("text/html")
 public class Test {
 
+	
+	@POST
+	@Path("/aaaGETUserInitialWeights")
+
+	public String getUserIinitailWeights(@FormParam("id") String ID) throws org.json.simple.parser.ParseException {
+		RankingInputsModel r = new RankingInputsModel();
+		String result = r.getUserInitialWeightsByUserID(ID).toString();
+		return result;
+
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////
+	/**
+	 * 
+	 * Test Enter inialWeights service
+	 */
+	
+	@POST
+	@Path("/enterInitialWeights1User")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String enterInitialWeights1User(@FormParam("catname1") String catname1,
+			@FormParam("catratio1") String catratio1, @FormParam("catname2") String catname2,
+			@FormParam("catratio2") String catratio2, @FormParam("catname3") String catname3,
+			@FormParam("catratio3") String catratio3, @FormParam("catname4") String catname4,
+			@FormParam("catratio4") String catratio4, @FormParam("catname5") String catname5,
+			@FormParam("catratio5") String catratio5, @FormParam("catname6") String catname6,
+			@FormParam("catratio6") String catratio6, @FormParam("catname7") String catname7,
+			@FormParam("catratio7") String catratio7, @FormParam("catname8") String catname8,
+			@FormParam("catratio8") String catratio8, @FormParam("catname9") String catname9,
+			@FormParam("catratio9") String catratio9, @FormParam("catname10") String catname10,
+			@FormParam("catratio10") String catratio10,
+
+			@FormParam("catname11") String catname11, @FormParam("catratio11") String catratio11,
+
+			@FormParam("catname12") String catname12, @FormParam("catratio12") String catratio12,
+
+			@FormParam("userID") String userID) throws org.json.simple.parser.ParseException {
+
+		JSONArray userInialWeights = new JSONArray();
+
+		JSONObject jsonObj1 = new JSONObject();
+		jsonObj1.put("categoryName", catname1);
+		jsonObj1.put("initialWeight", catratio1);
+		userInialWeights.add(jsonObj1);
+		
+		
+		
+		JSONObject jsonObj2 = new JSONObject();
+		jsonObj2.put("categoryName", catname2);
+		jsonObj2.put("initialWeight", catratio2);
+		userInialWeights.add(jsonObj2);
+		JSONObject jsonObj3 = new JSONObject();
+		jsonObj3.put("categoryName", catname3);
+		jsonObj3.put("initialWeight", catratio3);
+		userInialWeights.add(jsonObj3);
+		JSONObject jsonObj4 = new JSONObject();
+		jsonObj4.put("categoryName", catname4);
+		jsonObj4.put("initialWeight", catratio4);
+		userInialWeights.add(jsonObj4);
+		JSONObject jsonObj5 = new JSONObject();
+		jsonObj5.put("categoryName", catname5);
+		jsonObj5.put("initialWeight", catratio5);
+		userInialWeights.add(jsonObj5);
+		JSONObject jsonObj6 = new JSONObject();
+		jsonObj6.put("categoryName", catname6);
+		jsonObj6.put("initialWeight", catratio6);
+		userInialWeights.add(jsonObj6);
+		JSONObject jsonObj7 = new JSONObject();
+		jsonObj7.put("categoryName", catname7);
+		jsonObj7.put("initialWeight", catratio7);
+		userInialWeights.add(jsonObj7);
+		JSONObject jsonObj8 = new JSONObject();
+		jsonObj8.put("categoryName", catname8);
+		jsonObj8.put("initialWeight", catratio8);
+		userInialWeights.add(jsonObj8);
+		JSONObject jsonObj9 = new JSONObject();
+		jsonObj9.put("categoryName", catname9);
+		jsonObj9.put("initialWeight", catratio9);
+		userInialWeights.add(jsonObj9);
+		JSONObject jsonObj10 = new JSONObject();
+		jsonObj10.put("categoryName", catname10);
+		jsonObj10.put("initialWeight", catratio10);
+		userInialWeights.add(jsonObj10);
+		JSONObject jsonObj11 = new JSONObject();
+		jsonObj11.put("categoryName", catname11);
+		jsonObj11.put("initialWeight", catratio11);
+		userInialWeights.add(jsonObj11);
+		JSONObject jsonObj12 = new JSONObject();
+		jsonObj12.put("categoryName", catname12);
+		jsonObj12.put("initialWeight", catratio12);
+		userInialWeights.add(jsonObj12);
+
+		String userInitialWeightsSTR = userInialWeights.toString();
+		
+//		System.out.println("VVVVVVV  "+userID );
+//		System.out.println("KKKKKKKKKKKKKKKKKK  ");
+//		System.out.println(userInitialWeightsSTR);
+		String serviceUrl = "http://5-dot-secondhelloworld-1221.appspot.com/restNotes/enterInitialWeightsForOneUserService";
+
+		//String serviceUrl = "http://4-dot-secondhelloworld-1221.appspot.com/restNotes/enterInitialWeightsForOneUserService";
+
+		String urlParameters = "userID=" + userID + "&userInitialWeightsSTR=" + userInitialWeightsSTR;
+
+		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+
+		return retJson;
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	/***
 	 * Test getNearestStoresToUser web service
 	 ***/
@@ -109,5 +220,55 @@ public class Test {
 
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	@POST
+	@Path("/getOffers")
+	@Produces("text/html")
+	public String getOffers(@FormParam("userID") String userID)
+			throws org.json.simple.parser.ParseException, JSONException {
+
+		String serviceUrl = "http://5-dot-secondhelloworld-1221.appspot.com/restOffer/getOfferService";
+		// String serviceUrl =
+		// "http://localhost:8888/restOffer/getOfferService";
+		String urlParameters = "userID=" + userID;
+		String res = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		System.out.println("Result = " + res);
+
+		Vector<Offer> offers = new Vector<Offer>();
+		offers = getParsedOffers(res);
+		System.out.println("----------Offers-----------------------");
+		for (int i = 0; i < offers.size(); i++) {
+			System.out.println(offers.get(i).toString());
+		}
+
+		return res;
+
+	}
+
+	public Vector<Offer> getParsedOffers(String offersSTR) throws ParseException {
+		JSONParser parser = new JSONParser();
+		Vector<Offer> result = new Vector<Offer>();
+		JSONObject o = (JSONObject) parser.parse(offersSTR.toString());
+		JSONArray jsonArray = (JSONArray) o.get("result");
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject obj = new JSONObject();
+			obj = (JSONObject) jsonArray.get(i);
+			Offer offer = new Offer();
+
+			offer.setOfferID(String.valueOf(obj.get("offerID")));
+			offer.setCategory(String.valueOf(obj.get("category")));
+			offer.setContent(String.valueOf(obj.get("content")));
+			offer.setStartDate(String.valueOf(obj.get("startDate")));
+			offer.setEndDate(String.valueOf(obj.get("endDate")));
+			offer.setStoreID(String.valueOf(obj.get("storeID")));
+			offer.setStoreLat(Double.valueOf(obj.get("storeLat").toString()));
+			offer.setStoreLong(Double.valueOf(obj.get("storeLong").toString()));
+			offer.setJsonStoreEmail(String.valueOf(obj.get("jsonStoreEmail")));
+			result.add(offer);
+
+		}
+		return result;
+	}
 
 }

@@ -90,7 +90,7 @@ public class TextCategorization {
 		//System.out.println("sentenceClass  = "+sentenceClass);
 		if (sentenceClass.equals("") || sentenceClass.equals("NoCategory")) {
 			//remove this comment tomorrow
-			sentenceClass = classifyByUclassify(textinput);
+			//sentenceClass = classifyByUclassify(textinput);
 			sentenceClass = classifyByAlchemy(sentenceClass);
 		}
 		

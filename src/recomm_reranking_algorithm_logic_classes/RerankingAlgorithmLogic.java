@@ -38,7 +38,6 @@ public class RerankingAlgorithmLogic {
 
 		sourcesSignificance = rankModel.getInputSourcesSignificance();
 		userInitialWeights = rankModel.getUserInitialWeightsByUserID(userID);
-
 		if (sourcesSignificance.size() > 0 && userInitialWeights.size() > 0) {
 			UpdatePreferenceLastDate lastDate = new UpdatePreferenceLastDate();
 			Timestamp lastUpdateDate = lastDate.getLastUpdatePreferneceDate(userID);

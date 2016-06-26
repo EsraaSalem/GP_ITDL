@@ -64,7 +64,8 @@ public class NoteModel {
 		return false;
 	}
 
-	public boolean saveDeadlineNoteUpdate(String noteID, String deadLineDate, String deadLineTitle,
+	public boolean saveDeadlineNoteUpdate(String noteID, String deadLineDate,
+			String deadLineTitle,
 			String progressPercentage) {
 
 		Key k = KeyFactory.createKey("Note", Long.parseLong(noteID));
@@ -88,7 +89,8 @@ public class NoteModel {
 		return false;
 	}
 
-	public boolean saveMeetingNoteUpdate(String noteID, String meetingAgenda, String meetingNoteDate,
+	public boolean saveMeetingNoteUpdate(String noteID, String meetingAgenda,
+			String meetingNoteDate,
 			String meetingPlace, String meetingTitle, String estimatedTransportTime) {
 
 		Key k = KeyFactory.createKey("Note", Long.parseLong(noteID));

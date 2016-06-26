@@ -11,17 +11,30 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Test web services</title>
 </head>
-<h1>Nearest stores</h1>
-<form action="textcat/getNearestStoresToUser" method="post">
-	userID<input type="text" name="userID"> <input type="submit"
-		value="getNearestStoresToUser">
-</form>
-<H1>Text categorization</H1>
 
-<form action="textcat/cat" method="post">
-	userID<input type="text" name="word"> <input type="submit"
-		value="Categorization">
-</form>
+<body>
+<h1>Add Shopping Note</h1>
+
+	<form action="textcat/addShoppingNote" method="post">
+
+		Priority<input type="text" name="priorty"><br>
+		productToBuy<input type="text" name="productToBuy"><br>
+		productCategory<input type="text" name="productCategory"><br>
+		userID<input type="text" name="userID"><br> <input
+			type="submit" value="Add Shopping note">
+	</form>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 </body>
