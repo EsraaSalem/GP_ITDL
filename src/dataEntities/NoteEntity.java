@@ -12,10 +12,20 @@ public abstract class NoteEntity {
 	protected boolean isdeleted;
 	protected boolean isTextCategorized;
 	protected String noteType;
-	protected String Prority;
+	//protected String Prority;
 	protected boolean isAdded;
 	protected boolean isUpdated;
 	protected boolean isActive;
+	protected String priority;
+	
+	public String getPriority() {
+		return priority;
+	}
+
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
+
 	/**
 	 * @return the isActive
 	 */
@@ -41,8 +51,9 @@ public abstract class NoteEntity {
 		super();
 	}
 	
-	public NoteEntity(String noteID, String userID, Timestamp creationDate, boolean isDone, boolean isTextCategorized,
-			String noteType ) {
+	public NoteEntity(String noteID, String userID, Timestamp creationDate, 
+			boolean isDone, boolean isTextCategorized,
+			String noteType,String priority ) {
 		super();
 		
 		this.servernoteID = noteID;
@@ -51,21 +62,22 @@ public abstract class NoteEntity {
 		this.isDone = isDone;
 		this.isTextCategorized = isTextCategorized;
 		this.noteType = noteType;
+		this.priority = priority;
 	}
 	
-	/**
-	 * @return the prority
-	 */
-	public String getPrority() {
-		return Prority;
-	}
-
-	/**
-	 * @param prority the prority to set
-	 */
-	public void setPrority(String prority) {
-		Prority = prority;
-	}
+//	/**
+//	 * @return the prority
+//	 */
+//	public String getPrority() {
+//		return Prority;
+//	}
+//
+//	/**
+//	 * @param prority the prority to set
+//	 */
+//	public void setPrority(String prority) {
+//		Prority = prority;
+//	}
 
 	public String getUserID() {
 		return userID;

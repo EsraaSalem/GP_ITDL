@@ -21,9 +21,9 @@ public class OrdinaryNoteEntity extends NoteEntity {
 	}
 
 	public OrdinaryNoteEntity(String noteID, String userID, Timestamp creationDate, boolean isDone,
-			boolean isTextCategorized, String noteType, String noteContent) {
+			boolean isTextCategorized, String noteType, String noteContent,String priority) {
 		
-		super(noteID, userID, creationDate, isDone, isTextCategorized, noteType);
+		super(noteID, userID, creationDate, isDone, isTextCategorized, noteType,priority);
 		this.noteContent = noteContent;
 	}
 

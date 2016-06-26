@@ -13,17 +13,56 @@
 </head>
 
 <body>
-<h1>Add Shopping Note</h1>
+<form action="textcat/getAllNotesService" method="post">
+
+	<input type="text" name="userID"> <input type="submit"
+		value="get all notes">
+</form>
+Add Ordinary Note
+	<form action="textcat/addOrdinaryNote" method="post">
+		Ordinary note: <input type="text" name="ordinaryNoteContent">
+		<br>userID<input type="text" name="userID"> 
+		<br>priorty<input type="text" name="priority">
+		<input
+			type="submit" value="Add ordinary note">
+			
+	</form>
+
+	Add Meeting Note
+	<form action="textcat/addMeetingNote" method="post">
+		userID<input type="text" name="userID"><br>
+		estimatedTransportTime<input type="text" name="estimatedTransportTime"><br>
+		meetingNoteDate<input type="text" name="meetingNoteDate"><br>
+		meetingPlace<input type="text" name="meetingPlace"><br>
+		meetingAgenda<input type="text" name="meetingAgenda"><br>
+		meetingTitle<input type="text" name="meetingTitle"><br>
+		<br>priorty<input type="text" name="priority">
+		 <input
+			type="submit" value="Add Meeting note">
+	</form>
+
+	Add Deadline note
+	<form action="textcat/addDeadLineNote" method="post">
+
+		progressPercentage<input type="text" name="progressPercentage"><br>
+		deadLineTitle<input type="text" name="deadLineTitle"><br>
+		deadLineDate<input type="text" name="deadLineDate"><br>
+		userID<input type="text" name="userID"><br>
+		<br>priorty<input type="text" name="priority">
+		 <input
+			type="submit" value="Add Deadline note">
+	</form>
+	Add Shopping Note
 
 	<form action="textcat/addShoppingNote" method="post">
 
-		Priority<input type="text" name="priorty"><br>
 		productToBuy<input type="text" name="productToBuy"><br>
 		productCategory<input type="text" name="productCategory"><br>
-		userID<input type="text" name="userID"><br> <input
+		userID<input type="text" name="userID"><br> 
+		<br>priorty<input type="text" name="priority">
+		<input
 			type="submit" value="Add Shopping note">
 	</form>
-
 
 
 

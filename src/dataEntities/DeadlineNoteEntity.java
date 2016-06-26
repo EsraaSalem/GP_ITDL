@@ -62,8 +62,9 @@ public class DeadlineNoteEntity extends NoteEntity {
 			Timestamp creationDate, 
 			boolean isDone,
 			boolean isTextCategorized, 
-			String noteType) {
-		super(noteID, userID, creationDate, isDone, isTextCategorized, noteType);
+			String noteType,
+			String priority) {
+		super(noteID, userID, creationDate, isDone, isTextCategorized, noteType,priority);
 		
 		this.progressPercentage = progressPercentage;
 		this.deadLineTitle = deadLineTitle;

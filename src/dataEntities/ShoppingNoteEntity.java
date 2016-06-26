@@ -32,12 +32,13 @@ public class ShoppingNoteEntity extends NoteEntity {
 		// TODO Auto-generated constructor stub
 	}
 	public ShoppingNoteEntity(String noteID, String userID, Timestamp creationDate, boolean isDone,
-			boolean isTextCategorized, String noteType, String productToBuy, String productCategory) {
-		super(noteID, userID, creationDate, isDone, isTextCategorized, noteType);
+			boolean isTextCategorized, String noteType, String productToBuy, String productCategory,String priority) {
+		super(noteID, userID, creationDate, isDone, isTextCategorized, noteType,priority);
 		this.productToBuy = productToBuy;
 		this.productCategory = productCategory;
 		// TODO Auto-generated constructor stub
 	}
+	
 	
 	
 	

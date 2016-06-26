@@ -21,7 +21,8 @@ public class NoteParser {
 				java.sql.Timestamp.valueOf(object1.get("deadLineDate").toString()), object1.get("noteID").toString(),
 				object1.get("userID").toString(), java.sql.Timestamp.valueOf(object1.get("creationDate").toString()),
 				Boolean.valueOf(object1.get("isDone").toString()),
-				Boolean.valueOf(object1.get("isTextCategorized").toString()), object1.get("noteType").toString());
+				Boolean.valueOf(object1.get("isTextCategorized").toString()), object1.get("noteType").toString()
+				, object1.get("priority").toString());
 
 		return deadLineNoteObj;
 	}
@@ -32,7 +33,7 @@ public class NoteParser {
 				Timestamp.valueOf(jsonObj.get("creationDate").toString()),
 				Boolean.valueOf(jsonObj.get("isDone").toString()),
 				Boolean.valueOf(jsonObj.get("isTextCategorized").toString()), jsonObj.get("noteType").toString(),
-				jsonObj.get("noteContent").toString());
+				jsonObj.get("noteContent").toString(), jsonObj.get("priority").toString());
 
 	}
 
@@ -43,7 +44,8 @@ public class NoteParser {
 				java.sql.Timestamp.valueOf(jsonObj.get("creationDate").toString()),
 				Boolean.valueOf(jsonObj.get("isDone").toString()),
 				Boolean.valueOf(jsonObj.get("isTextCategorized").toString()), jsonObj.get("noteType").toString(),
-				jsonObj.get("productToBuy").toString(), jsonObj.get("productCategory").toString().toLowerCase().trim());
+				jsonObj.get("productToBuy").toString(), jsonObj.get("productCategory").toString().toLowerCase().trim()
+				, jsonObj.get("priority").toString());
 
 	}
 
@@ -55,7 +57,8 @@ public class NoteParser {
 				jsonObj.get("meetingAgenda").toString(), jsonObj.get("noteID").toString(),
 				jsonObj.get("userID").toString(), java.sql.Timestamp.valueOf(jsonObj.get("creationDate").toString()),
 				Boolean.valueOf(jsonObj.get("isDone").toString()),
-				Boolean.valueOf(jsonObj.get("isTextCategorized").toString()), jsonObj.get("noteType").toString());
+				Boolean.valueOf(jsonObj.get("isTextCategorized").toString()), jsonObj.get("noteType").toString()
+				, jsonObj.get("priority").toString());
 
 	}
 
@@ -75,7 +78,7 @@ public class NoteParser {
 		object.put("userID", note.getUserID());
 		object.put("isDone", note.isDone());
 		object.put("isTextCategorized", note.isTextCategorized());
-
+		object.put("priority", note.getPriority());
 		return object;
 	}
 
@@ -89,7 +92,7 @@ public class NoteParser {
 		object.put("userID", note.getUserID());
 		object.put("isDone", note.isDone());
 		object.put("isTextCategorized", note.isTextCategorized());
-
+		object.put("priority", note.getPriority());
 		return object;
 	}
 
@@ -106,7 +109,7 @@ public class NoteParser {
 		object.put("userID", note.getUserID());
 		object.put("isDone", String.valueOf(note.isDone()));
 		object.put("isTextCategorized", String.valueOf(note.isTextCategorized()));
-
+		object.put("priority", note.getPriority());
 		return object;
 	}
 
@@ -121,7 +124,8 @@ public class NoteParser {
 		object.put("userID", note.getUserID());
 		object.put("isDone", note.isDone());
 		object.put("isTextCategorized", note.isTextCategorized());
-
+		object.put("priority", note.getPriority());
+		
 		return object;
 	}
 
@@ -132,7 +136,7 @@ public class NoteParser {
 				Boolean.valueOf(entity.getProperty("isDone").toString()),
 				Boolean.valueOf(entity.getProperty("isTextCategorized").toString()),
 				entity.getProperty("noteType").toString(), entity.getProperty("productToBuy").toString(),
-				entity.getProperty("productCategory").toString());
+				entity.getProperty("productCategory").toString(), entity.getProperty("priority").toString());
 		return shoppingNoteObj;
 	}
 
@@ -142,7 +146,8 @@ public class NoteParser {
 				java.sql.Timestamp.valueOf(entity.getProperty("creationDate").toString()),
 				Boolean.valueOf(entity.getProperty("isDone").toString()),
 				Boolean.valueOf(entity.getProperty("isTextCategorized").toString()),
-				entity.getProperty("noteType").toString(), entity.getProperty("noteContent").toString());
+				entity.getProperty("noteType").toString(), entity.getProperty("noteContent").toString()
+				, entity.getProperty("priority").toString());
 		return ordniaryNoteObj;
 	}
 
@@ -156,7 +161,8 @@ public class NoteParser {
 				java.sql.Timestamp.valueOf(entity.getProperty("creationDate").toString()),
 				Boolean.valueOf(entity.getProperty("isDone").toString()),
 				Boolean.valueOf(entity.getProperty("isTextCategorized").toString()),
-				entity.getProperty("noteType").toString());
+				entity.getProperty("noteType").toString()
+				, entity.getProperty("priority").toString());
 		return meetingNoteObj;
 	}
 
@@ -169,7 +175,8 @@ public class NoteParser {
 				java.sql.Timestamp.valueOf(String.valueOf(entity.getProperty("creationDate"))),
 				Boolean.valueOf(String.valueOf(entity.getProperty("isDone"))),
 				Boolean.valueOf(String.valueOf(entity.getProperty("isTextCategorized"))),
-				String.valueOf(entity.getProperty("noteType")));
+				String.valueOf(entity.getProperty("noteType"))
+				, entity.getProperty("priority").toString());
 		return deadLineNoteObj;
 	}
 }
