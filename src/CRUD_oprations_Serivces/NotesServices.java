@@ -51,7 +51,7 @@ public class NotesServices {
 				Timestamp.valueOf(jsonObj.get("noteDateCreation").toString()),
 				Boolean.valueOf(jsonObj.get("isDone").toString()),
 				Boolean.valueOf(jsonObj.get("isTextCategorized").toString()), jsonObj.get("noteType").toString(),
-				jsonObj.get("noteContent").toString(),jsonObj.get("priority").toString());
+				jsonObj.get("noteContent").toString());
 	    note .setAdded(Boolean.valueOf(jsonObj.get("isAdded").toString()));
 	    note .setUpdated(Boolean.valueOf(jsonObj.get("isUpdated").toString()));
 	    note .setIsdeleted(Boolean.valueOf(jsonObj.get("isDeleted").toString()));
@@ -79,9 +79,8 @@ public class NotesServices {
 				java.sql.Timestamp.valueOf(jsonObj.get("noteDateCreation").toString()),
 				Boolean.valueOf(jsonObj.get("isDone").toString()),
 				Boolean.valueOf(jsonObj.get("isTextCategorized").toString()), jsonObj.get("noteType").toString(),
-				jsonObj.get("productToBuy").toString(), jsonObj.get("productCategory").toString()
-				,jsonObj.get("priority").toString());
-		note.setPriority(jsonObj.get("notePriority").toString());
+				jsonObj.get("productToBuy").toString(), jsonObj.get("productCategory").toString());
+		note.setPrority(jsonObj.get("notePriority").toString());
 		note .setAdded(Boolean.valueOf(jsonObj.get("isAdded").toString()));
 	    note .setUpdated(Boolean.valueOf(jsonObj.get("isUpdated").toString()));
 	    note .setIsdeleted(Boolean.valueOf(jsonObj.get("isDeleted").toString()));
@@ -113,9 +112,8 @@ MeetingNoteEntity note=new MeetingNoteEntity(java.sql.Timestamp.valueOf(jsonObj.
 				jsonObj.get("meetingAgenda").toString(), jsonObj.get("serverNoteId").toString(),
 				jsonObj.get("userId").toString(), java.sql.Timestamp.valueOf(jsonObj.get("noteDateCreation").toString()),
 				Boolean.valueOf(jsonObj.get("isDone").toString()),
-	    Boolean.valueOf(jsonObj.get("isTextCategorized").toString()), jsonObj.get("noteType").toString()
-	    ,jsonObj.get("priority").toString());
-note.setPriority(jsonObj.get("notePriority").toString());
+	    Boolean.valueOf(jsonObj.get("isTextCategorized").toString()), jsonObj.get("noteType").toString());
+note.setPrority(jsonObj.get("notePriority").toString());
 note .setAdded(Boolean.valueOf(jsonObj.get("isAdded").toString()));
 note .setUpdated(Boolean.valueOf(jsonObj.get("isUpdated").toString()));
 note .setIsdeleted(Boolean.valueOf(jsonObj.get("isDeleted").toString()));
@@ -144,9 +142,8 @@ return note;
 				java.sql.Timestamp.valueOf(object1.get("deadLineDate").toString()), object1.get("serverNoteId").toString(),
 				object1.get("userId").toString(), java.sql.Timestamp.valueOf(object1.get("noteDateCreation").toString()),
 				Boolean.valueOf(object1.get("isDone").toString()),
-				Boolean.valueOf(object1.get("isTextCategorized").toString()), object1.get("noteType").toString()
-				,jsonObj.get("priority").toString());
-			deadLineNoteObj.setPriority(object1.get("notePriority").toString());
+				Boolean.valueOf(object1.get("isTextCategorized").toString()), object1.get("noteType").toString());
+			deadLineNoteObj.setPrority(object1.get("notePriority").toString());
 			deadLineNoteObj.setAdded(Boolean.valueOf(object1.get("isAdded").toString()));
 			deadLineNoteObj.setUpdated(Boolean.valueOf(object1.get("isUpdated").toString()));
 			deadLineNoteObj.setIsdeleted(Boolean.valueOf(object1.get("isDeleted").toString()));
@@ -200,8 +197,7 @@ return note;
 						noteid=onote.getLocalnoteID();
 					 }
 					else if (onote.isUpdated()&&onote.isAdded()){
-						testupdate =nm.saveOrdinaryNoteUpdate(onote.getServernoteID(), onote.getNoteContent()
-							,	onote.getPriority());
+						testupdate =nm.saveOrdinaryNoteUpdate(onote.getServernoteID(), onote.getNoteContent());
 						syncType="Updated";
 						noteid=onote.getLocalnoteID();
 					}
@@ -220,9 +216,7 @@ return note;
 						servernoteid=String.valueOf(testAdded);
 						noteid=Dnote.getLocalnoteID();					 }
 					else if (Dnote.isUpdated()&&Dnote.isAdded()){
-						nm.saveDeadlineNoteUpdate(Dnote.getServernoteID(), Dnote.getDeadLineDate().toString(),
-								Dnote.getDeadLineTitle(), String .valueOf(Dnote.getProgressPercentage())
-								,String .valueOf(Dnote.getPriority()));
+						nm.saveDeadlineNoteUpdate(Dnote.getServernoteID(), Dnote.getDeadLineDate().toString(), Dnote.getDeadLineTitle(), String .valueOf(Dnote.getProgressPercentage()));
 						syncType="Updated";
 						noteid=Dnote.getLocalnoteID();
 					}
@@ -242,8 +236,7 @@ return note;
 						servernoteid=String.valueOf(testAdded);
 						noteid=Shnote.getLocalnoteID();					 }
 					else if (Shnote.isUpdated()&&Shnote.isAdded()){
-						nm.saveShoppingNoteUpdate(Shnote.getServernoteID(),Shnote.getProductToBuy(), 
-								Shnote.getProductCategory(),String .valueOf(Shnote.getPriority()));
+						nm.saveShoppingNoteUpdate(Shnote.getServernoteID(),Shnote.getProductToBuy(), Shnote.getProductCategory());
 						syncType="Updated";
 						noteid=Shnote.getLocalnoteID();
 					}
@@ -264,9 +257,7 @@ return note;
 						noteid=Mnote.getLocalnoteID();					 }
 					else if (Mnote.isUpdated()&&Mnote.isAdded()){
 						nm.saveMeetingNoteUpdate(Mnote.getServernoteID(),Mnote.getMeetingAgenda(),Mnote.getCreationDate().toString(), 
-								Mnote.getMeetingPlace(), Mnote.getMeetingTitle(),
-								String .valueOf(Mnote.getEstimatedTransportTime()),
-								String .valueOf(Mnote.getPriority()));
+								Mnote.getMeetingPlace(), Mnote.getMeetingTitle(),String .valueOf(Mnote.getEstimatedTransportTime()));
 						syncType="Updated";
 						noteid=Mnote.getLocalnoteID();
 					}
@@ -332,12 +323,10 @@ return note;
 	public String saveShoppingNoteUpdates(
 			@FormParam("noteID") String noteID,
 			@FormParam("productToBuy") String productToBuy, 
-			@FormParam("productCategory") String productCategory,
-			@FormParam("priority") String priority
-			)
+			@FormParam("productCategory") String productCategory)
 					throws org.json.simple.parser.ParseException {
 		NoteModel nm = new NoteModel();
-		boolean result = nm.saveShoppingNoteUpdate(noteID, productToBuy, productCategory,priority);
+		boolean result = nm.saveShoppingNoteUpdate(noteID, productToBuy, productCategory);
 		JSONObject object = new JSONObject();
 		if (result)
 			object.put("Status", "OK");
@@ -380,12 +369,11 @@ return note;
 			@FormParam("noteID") String noteID,
 			@FormParam("deadLineDate") String deadLineDate, 
 			@FormParam("deadLineTitle") String deadLineTitle,
-			@FormParam("progressPercentage") String progressPercentage,
-			@FormParam("priority") String priority) throws org.json.simple.parser.ParseException {
+			@FormParam("progressPercentage") String progressPercentage) throws org.json.simple.parser.ParseException {
 
 		NoteModel nm = new NoteModel();
 
-		boolean result = nm.saveDeadlineNoteUpdate(noteID, deadLineDate, deadLineTitle, progressPercentage,priority);
+		boolean result = nm.saveDeadlineNoteUpdate(noteID, deadLineDate, deadLineTitle, progressPercentage);
 		JSONObject object = new JSONObject();
 		if (result)
 			object.put("Status", "OK");
@@ -405,17 +393,15 @@ return note;
 			@FormParam("meetingAgenda") String meetingAgenda,
 			@FormParam("meetingPlace") String meetingPlace, 
 			@FormParam("meetingNoteDate") String meetingNoteDate,
-			@FormParam("estimatedTransportTime") String estimatedTransportTime,
-			@FormParam("priority") String priority)
+			@FormParam("estimatedTransportTime") String estimatedTransportTime)
 					throws org.json.simple.parser.ParseException {
 
 		System.out.println("Services");
 
 		NoteModel nm = new NoteModel();
 
-		boolean result = nm.saveMeetingNoteUpdate(noteID, meetingAgenda, meetingNoteDate, meetingPlace,
-				meetingTitle,
-				estimatedTransportTime,priority);
+		boolean result = nm.saveMeetingNoteUpdate(noteID, meetingAgenda, meetingNoteDate, meetingPlace, meetingTitle,
+				estimatedTransportTime);
 
 		JSONObject object = new JSONObject();
 		if (result)
@@ -435,7 +421,7 @@ return note;
 	public String saveOrdinaryNoteUpdates(
 			@FormParam("noteID") String noteID,
 			@FormParam("noteContent") String noteContent
-			,@FormParam("priority") String priority) throws org.json.simple.parser.ParseException {
+			) throws org.json.simple.parser.ParseException {
 
 		System.out.println("Services");
 
@@ -443,7 +429,7 @@ return note;
 		
 	//	entity.getKey().getId()
 		
-		boolean result = nm.saveOrdinaryNoteUpdate(noteID, noteContent,priority);
+		boolean result = nm.saveOrdinaryNoteUpdate(noteID, noteContent);
 
 		JSONObject object = new JSONObject();
 		if (result)
@@ -544,12 +530,11 @@ return note;
 			@FormParam("deadLineTitle") String deadLineTitle, @FormParam("deadLineDate") String deadLineDate,
 			@FormParam("creationDate") String creationDate, @FormParam("isDone") String isDone,
 			@FormParam("isTextCategorized") String isTextCategorized, @FormParam("noteType") String noteType,
-			@FormParam("userID") String userID,
-			@FormParam("priority") String priority) {
+			@FormParam("userID") String userID) {
 
 		DeadlineNoteEntity deadLineNoteEntityObj = new DeadlineNoteEntity(Integer.parseInt(progressPercentage),
 				deadLineTitle, Timestamp.valueOf(deadLineDate), "", userID, Timestamp.valueOf(creationDate),
-				Boolean.valueOf(isDone), Boolean.valueOf(isTextCategorized), noteType,priority);
+				Boolean.valueOf(isDone), Boolean.valueOf(isTextCategorized), noteType);
 		NoteModel nm = new NoteModel();
 		long result = nm.adddeadLineNote(deadLineNoteEntityObj);
 		JSONObject object = new JSONObject();
@@ -569,12 +554,10 @@ return note;
 	public String addShoppingNote(@FormParam("productToBuy") String productToBuy,
 			@FormParam("productCategory") String productCategory, @FormParam("creationDate") String creationDate,
 			@FormParam("isDone") String isDone, @FormParam("isTextCategorized") String isTextCategorized,
-			@FormParam("noteType") String noteType, @FormParam("userID") String userID,
-			@FormParam("priority") String priority) {
+			@FormParam("noteType") String noteType, @FormParam("userID") String userID) {
 
 		ShoppingNoteEntity shoppingNoteEntityObj = new ShoppingNoteEntity("", userID, Timestamp.valueOf(creationDate),
-				Boolean.valueOf(isDone), Boolean.valueOf(isTextCategorized), 
-				noteType, productToBuy, productCategory,priority);
+				Boolean.valueOf(isDone), Boolean.valueOf(isTextCategorized), noteType, productToBuy, productCategory);
 
 		NoteModel nm = new NoteModel();
 		long result = nm.addShoppingNote(shoppingNoteEntityObj);
@@ -597,13 +580,12 @@ return note;
 			@FormParam("noteType") String noteType, @FormParam("userID") String userID,
 			@FormParam("meetingAgenda") String meetingAgenda, @FormParam("meetingPlace") String meetingPlace,
 			@FormParam("meetingNoteDate") String meetingNoteDate,
-			@FormParam("estimatedTransportTime") String estimatedTransportTime,
-			@FormParam("priority") String priority) {
+			@FormParam("estimatedTransportTime") String estimatedTransportTime) {
 
 		MeetingNoteEntity meetingNoteEntityObj = new MeetingNoteEntity(java.sql.Timestamp.valueOf(meetingNoteDate),
 				java.sql.Time.valueOf(estimatedTransportTime), meetingTitle, meetingPlace, meetingAgenda, "", userID,
 				java.sql.Timestamp.valueOf(creationDate), Boolean.valueOf(isDone), Boolean.valueOf(isTextCategorized),
-				noteType,priority);
+				noteType);
 
 		NoteModel nm = new NoteModel();
 		long result = nm.addMeetingNote(meetingNoteEntityObj);
@@ -624,11 +606,10 @@ return note;
 	public String addOrdinaryNote(@FormParam("ordinaryNoteContent") String ordinaryNoteContent,
 			@FormParam("creationDate") String creationDate, @FormParam("isDone") String isDone,
 			@FormParam("isTextCategorized") String isTextCategorized, @FormParam("noteType") String noteType,
-			@FormParam("userID") String userID,
-			@FormParam("priority") String priority) {
+			@FormParam("userID") String userID) {
 
 		OrdinaryNoteEntity ordinaryNoteEntityObj = new OrdinaryNoteEntity("", userID, Timestamp.valueOf(creationDate),
-				Boolean.valueOf(isDone), Boolean.valueOf(isTextCategorized), noteType, ordinaryNoteContent,priority);
+				Boolean.valueOf(isDone), Boolean.valueOf(isTextCategorized), noteType, ordinaryNoteContent);
 		NoteModel nm = new NoteModel();
 		long result = nm.addOrdinaryNote(ordinaryNoteEntityObj);
 		JSONObject object = new JSONObject();

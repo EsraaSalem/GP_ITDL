@@ -42,8 +42,7 @@ public class NoteModel {
 	{
 		noteParser = new NoteParser();
 	}
-	public boolean saveShoppingNoteUpdate(String noteID, String productToBuy, String productCategory
-			,String priority) {
+	public boolean saveShoppingNoteUpdate(String noteID, String productToBuy, String productCategory) {
 
 		Key k = KeyFactory.createKey("Note", Long.parseLong(noteID));
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -53,8 +52,7 @@ public class NoteModel {
 			Entity note = datastore.get(k);
 			note.setProperty("productCategory", productCategory);
 			note.setProperty("productToBuy", productToBuy);
-			note.setProperty("priority", priority);
-
+		
 			datastore.put(note);
 			txn.commit();
 			return true;
@@ -68,8 +66,7 @@ public class NoteModel {
 
 	public boolean saveDeadlineNoteUpdate(String noteID, String deadLineDate,
 			String deadLineTitle,
-			String progressPercentage
-			,String priority) {
+			String progressPercentage) {
 
 		Key k = KeyFactory.createKey("Note", Long.parseLong(noteID));
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -80,7 +77,6 @@ public class NoteModel {
 			note.setProperty("deadLineDate", deadLineDate);
 			note.setProperty("deadLineTitle", deadLineTitle);
 			note.setProperty("progressPercentage", progressPercentage);
-			note.setProperty("priority", priority);
 
 			datastore.put(note);
 			txn.commit();
@@ -95,8 +91,7 @@ public class NoteModel {
 
 	public boolean saveMeetingNoteUpdate(String noteID, String meetingAgenda,
 			String meetingNoteDate,
-			String meetingPlace, String meetingTitle, String estimatedTransportTime,
-			String priority) {
+			String meetingPlace, String meetingTitle, String estimatedTransportTime) {
 
 		Key k = KeyFactory.createKey("Note", Long.parseLong(noteID));
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -109,7 +104,6 @@ public class NoteModel {
 			note.setProperty("meetingPlace", meetingPlace);
 			note.setProperty("meetingTitle", meetingTitle);
 			note.setProperty("estimatedTransportTime", estimatedTransportTime);
-			note.setProperty("priority", priority);
 
 			datastore.put(note);
 			txn.commit();
@@ -122,8 +116,7 @@ public class NoteModel {
 		return false;
 	}
 
-	public boolean saveOrdinaryNoteUpdate(String noteID, String noteContent,
-			String priority) {
+	public boolean saveOrdinaryNoteUpdate(String noteID, String noteContent) {
 
 		Key k = KeyFactory.createKey("Note", Long.parseLong(noteID));
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -132,8 +125,6 @@ public class NoteModel {
 			datastore.get(k);
 			Entity note = datastore.get(k);
 			note.setProperty("noteContent", noteContent);
-			note.setProperty("priority", priority);
-
 			datastore.put(note);
 			txn.commit();
 			return true;
@@ -157,8 +148,7 @@ public class NoteModel {
 					Boolean.valueOf(entity.getProperty("isDone").toString()),
 					Boolean.valueOf(entity.getProperty("isTextCategorized").toString()),
 					entity.getProperty("noteType").toString(), entity.getProperty("productToBuy").toString(),
-					entity.getProperty("productCategory").toString(),
-					entity.getProperty("priority").toString()));
+					entity.getProperty("productCategory").toString()));
 			return obj;
 		} catch (EntityNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -181,9 +171,7 @@ public class NoteModel {
 							java.sql.Timestamp.valueOf(String.valueOf(entity.getProperty("creationDate"))),
 							Boolean.valueOf(String.valueOf(entity.getProperty("isDone"))),
 							Boolean.valueOf(String.valueOf(entity.getProperty("isTextCategorized"))),
-							String.valueOf(entity.getProperty("noteType"))
-							,
-							entity.getProperty("priority").toString()));
+							String.valueOf(entity.getProperty("noteType"))));
 			return obj;
 		} catch (EntityNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -207,8 +195,7 @@ public class NoteModel {
 					java.sql.Timestamp.valueOf(entity.getProperty("creationDate").toString()),
 					Boolean.valueOf(entity.getProperty("isDone").toString()),
 					Boolean.valueOf(entity.getProperty("isTextCategorized").toString()),
-					entity.getProperty("noteType").toString(),
-					entity.getProperty("priority").toString()));
+					entity.getProperty("noteType").toString()));
 			return obj;
 		} catch (EntityNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -228,9 +215,7 @@ public class NoteModel {
 					java.sql.Timestamp.valueOf(entity.getProperty("creationDate").toString()),
 					Boolean.valueOf(entity.getProperty("isDone").toString()),
 					Boolean.valueOf(entity.getProperty("isTextCategorized").toString()),
-					entity.getProperty("noteType").toString(), entity.getProperty("noteContent").toString()
-					,
-					entity.getProperty("priority").toString()));
+					entity.getProperty("noteType").toString(), entity.getProperty("noteContent").toString()));
 			return obj;
 		} catch (EntityNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -330,7 +315,6 @@ public class NoteModel {
 			entity.setProperty("isTextCategorized", String.valueOf(ordinaryNoteObj.isTextCategorized()));
 			entity.setProperty("noteType", ordinaryNoteObj.getNoteType());
 			entity.setProperty("noteContent", ordinaryNoteObj.getNoteContent());
-			entity.setProperty("priority", ordinaryNoteObj.getPriority());
 
 			datastore.put(entity);
 			txn.commit();
@@ -358,7 +342,6 @@ public class NoteModel {
 			entity.setProperty("noteType", shoppingNoteObj.getNoteType());
 			entity.setProperty("productCategory", shoppingNoteObj.getProductCategory());
 			entity.setProperty("productToBuy", shoppingNoteObj.getProductToBuy());
-			entity.setProperty("priority", shoppingNoteObj.getPriority());
 
 			datastore.put(entity);
 			txn.commit();
@@ -385,7 +368,6 @@ public class NoteModel {
 			entity.setProperty("progressPercentage", String.valueOf(deadLineNoteObj.getProgressPercentage()));
 			entity.setProperty("deadLineTitle", deadLineNoteObj.getDeadLineTitle());
 			entity.setProperty("deadLineDate", String.valueOf(deadLineNoteObj.getDeadLineDate()));
-			entity.setProperty("priority", deadLineNoteObj.getPriority());
 
 			datastore.put(entity);
 			txn.commit();
@@ -415,7 +397,6 @@ public class NoteModel {
 			entity.setProperty("meetingPlace", meetingNoteObj.getMeetingPlace());
 			entity.setProperty("estimatedTransportTime", String.valueOf(meetingNoteObj.getEstimatedTransportTime()));
 			entity.setProperty("meetingNoteDate", String.valueOf(meetingNoteObj.getmeetingNoteDate()));
-			entity.setProperty("priority", meetingNoteObj.getPriority());
 
 			datastore.put(entity);
 			txn.commit();
@@ -460,8 +441,7 @@ public class NoteModel {
 						java.sql.Timestamp.valueOf(entity.getProperty("creationDate").toString()),
 						Boolean.valueOf(entity.getProperty("isDone").toString()),
 						Boolean.valueOf(entity.getProperty("isTextCategorized").toString()),
-						entity.getProperty("noteType").toString(),
-						entity.getProperty("priority").toString());
+						entity.getProperty("noteType").toString());
 				JSONObject object = new JSONObject();
 				object = noteParser.handleMeetingNoteJSONObject(meetingNoteObj);
 				JSONObject nType_nValues = new JSONObject();
@@ -474,9 +454,7 @@ public class NoteModel {
 						java.sql.Timestamp.valueOf(entity.getProperty("creationDate").toString()),
 						Boolean.valueOf(entity.getProperty("isDone").toString()),
 						Boolean.valueOf(entity.getProperty("isTextCategorized").toString()),
-						entity.getProperty("noteType").toString(), entity.getProperty("noteContent").toString()
-						,
-						entity.getProperty("priority").toString());
+						entity.getProperty("noteType").toString(), entity.getProperty("noteContent").toString());
 				JSONObject object = new JSONObject();
 				object = noteParser.handleOrdinaryNoteJSONObject(ordniaryNoteObj);
 				JSONObject nType_nValues = new JSONObject();
@@ -492,8 +470,7 @@ public class NoteModel {
 						Boolean.valueOf(entity.getProperty("isDone").toString()),
 						Boolean.valueOf(entity.getProperty("isTextCategorized").toString()),
 						entity.getProperty("noteType").toString(), entity.getProperty("productToBuy").toString(),
-						entity.getProperty("productCategory").toString(),
-						entity.getProperty("priority").toString());
+						entity.getProperty("productCategory").toString());
 				JSONObject object = new JSONObject();
 				object = noteParser.handleShoppingNoteJSONObject(shoppingNoteObj);
 				JSONObject nType_nValues = new JSONObject();
@@ -511,8 +488,7 @@ public class NoteModel {
 						java.sql.Timestamp.valueOf(String.valueOf(entity.getProperty("creationDate"))),
 						Boolean.valueOf(String.valueOf(entity.getProperty("isDone"))),
 						Boolean.valueOf(String.valueOf(entity.getProperty("isTextCategorized"))),
-						String.valueOf(entity.getProperty("noteType")),
-						entity.getProperty("priority").toString());
+						String.valueOf(entity.getProperty("noteType")));
 				JSONObject object = new JSONObject();
 				object = noteParser.handleDeadLineNoteJSONObject(deadLineNoteObj);
 				JSONObject nType_nValues = new JSONObject();

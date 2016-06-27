@@ -13,6 +13,15 @@
 </head>
 
 <body>
+
+<form action="textcat/update" method="post">
+
+	<input type="text" name="userID"> <input type="submit"
+		value="Update">
+</form>
+
+
+
 <form action="textcat/getAllNotesService" method="post">
 
 	<input type="text" name="userID"> <input type="submit"
@@ -22,7 +31,6 @@ Add Ordinary Note
 	<form action="textcat/addOrdinaryNote" method="post">
 		Ordinary note: <input type="text" name="ordinaryNoteContent">
 		<br>userID<input type="text" name="userID"> 
-		<br>priorty<input type="text" name="priority">
 		<input
 			type="submit" value="Add ordinary note">
 			
@@ -36,7 +44,7 @@ Add Ordinary Note
 		meetingPlace<input type="text" name="meetingPlace"><br>
 		meetingAgenda<input type="text" name="meetingAgenda"><br>
 		meetingTitle<input type="text" name="meetingTitle"><br>
-		<br>priorty<input type="text" name="priority">
+		
 		 <input
 			type="submit" value="Add Meeting note">
 	</form>
@@ -48,7 +56,7 @@ Add Ordinary Note
 		deadLineTitle<input type="text" name="deadLineTitle"><br>
 		deadLineDate<input type="text" name="deadLineDate"><br>
 		userID<input type="text" name="userID"><br>
-		<br>priorty<input type="text" name="priority">
+		
 		 <input
 			type="submit" value="Add Deadline note">
 	</form>
@@ -59,10 +67,12 @@ Add Ordinary Note
 		productToBuy<input type="text" name="productToBuy"><br>
 		productCategory<input type="text" name="productCategory"><br>
 		userID<input type="text" name="userID"><br> 
-		<br>priorty<input type="text" name="priority">
+		
 		<input
 			type="submit" value="Add Shopping note">
 	</form>
+
+
 
 
 

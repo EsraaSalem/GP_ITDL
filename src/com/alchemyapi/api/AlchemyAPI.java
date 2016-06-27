@@ -23,8 +23,8 @@ import org.xml.sax.SAXException;
 
 public class AlchemyAPI {
 
-	//public final String API_KEY = "7b18e56cf9fa7a645b58772b3417c73a15c511ba";//Yasmin
-	public final String API_KEY = "0cf65b78b415af649dbedc94df79d0e9e2dfebdd";//ESRAA
+	public final String API_KEY = "7b18e56cf9fa7a645b58772b3417c73a15c511ba";//Yasmin
+//	public final String API_KEY = "0cf65b78b415af649dbedc94df79d0e9e2dfebdd";//ESRAA
 	
 	private String _apiKey;
 	private String _requestUri = "http://access.alchemyapi.com/calls/";

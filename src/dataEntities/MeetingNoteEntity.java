@@ -52,9 +52,8 @@ public class MeetingNoteEntity extends NoteEntity {
 			Timestamp creationDate,
 			boolean isDone, 
 			boolean isTextCategorized,
-			String noteType,
-			String priority) {
-		super(noteID,userID,creationDate,isDone,isTextCategorized,noteType,priority);
+			String noteType) {
+		super(noteID,userID,creationDate,isDone,isTextCategorized,noteType);
 		this.meetingNoteDate = meetingNoteDate;
 		this.estimatedTransportTime = estimatedTransportTime;
 		this.meetingTitle = meetingTitle;
